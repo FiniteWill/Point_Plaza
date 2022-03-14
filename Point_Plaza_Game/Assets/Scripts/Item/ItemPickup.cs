@@ -30,7 +30,7 @@ public class ItemPickup : MonoBehaviour
     {
         gameObject.SetActive(false);
 
-        // TODO: Degine behaviors for item pickup
+        // TODO: Define behaviors for item pickup
         switch(itemDefinition)
         {
             case Item.Debug:
