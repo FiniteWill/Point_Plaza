@@ -68,6 +68,7 @@ public class PlatformerPlayer_Movement : MonoBehaviour
         {
             if (isGrounded)
             {
+                // Apply jump force and then change the animation state based on which way the player was moving
                 rgbd2D.AddForce(new Vector2(0.0f, JUMP_SPEED));
                 if (animationState == PlatformerAnimationState.RunLeft)
                 { 
