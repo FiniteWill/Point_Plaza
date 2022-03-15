@@ -12,7 +12,7 @@ public class PlatformerPlayer_Movement : MonoBehaviour
 
     // Movement Constants
     private const float HORIZONTAL_SPEED = 5.0f;
-    private const float JUMP_SPEED = 200.0f;
+    private const float JUMP_SPEED = 600.0f;
 
     // Movement Bindings
     private readonly KeyCode moveLeftControl = KeyCode.A;
