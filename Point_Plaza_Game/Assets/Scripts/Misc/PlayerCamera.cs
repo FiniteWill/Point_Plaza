@@ -41,7 +41,7 @@ public class PlayerCamera : MonoBehaviour
         //objectToMove.transform.position = targetPos;
     }
 
-    private void SnapToObject()
+    public void SnapToObject()
     {
         cam.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, zDepth);
     }

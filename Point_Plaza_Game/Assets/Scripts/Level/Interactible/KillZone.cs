@@ -10,6 +10,8 @@ public class KillZone : MonoBehaviour
     [SerializeField] private List<string> interactibleTags = null;
     private Collider2D collider;
 
+    public bool isPaused = false;
+
     private void Awake()
     {
         Assert.IsNotNull(interactibleTags, $"{this.name} does not have any tags specified for interaction.");
@@ -19,11 +21,20 @@ public class KillZone : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        foreach(string tag in interactibleTags)
+        if (!isPaused)
         {
-            if(other.CompareTag(tag))
+            Debug.Log($"{other.name} has triggered {this.name}");
+
+            foreach (string tag in interactibleTags)
             {
-                // Affect health
+                if (other.CompareTag(tag))
+                {
+                    // Affect health
+                    Health entityHealth = other.GetComponent<Health>();
+                    if (entityHealth != null)
+                    { entityHealth.health = 0; }
+                    else { Debug.Log($"{other.name} does not have an attached {nameof(entityHealth)}"); }
+                }
             }
         }
     }
