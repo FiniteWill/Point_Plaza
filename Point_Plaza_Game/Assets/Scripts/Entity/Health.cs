@@ -11,42 +11,25 @@ public class Health : MonoBehaviour
 {
     [SerializeField] private bool isDebugging = false;
     [SerializeField] private bool isVulnerable = true;
-    [SerializeField] public int health
+    public bool GetIsVulnerable() { return isVulnerable; }
+    [SerializeField] private int health = 0;
+    public void SetHealth(int newHealth)
     {
-        get => health;
-        set 
+        if(!isVulnerable)
         {
-            if(isVulnerable)
-            {
-                // Value changed, fire event
-                OnHealthChanged.Invoke();
-                newHealth = value;
-            }
+            HandleHealthChanged(newHealth);
         }
     }
 
-    private int newHealth = 0;
-    public UnityEvent OnHealthChanged = new UnityEvent();
-
-    public bool GetIsVulnerable() { return isVulnerable; }
-
-    private void Awake()
-    {
-        // Subscribe to OnHealthChanged event, call HandleHealthChanged() upon event firing.
-        OnHealthChanged.AddListener(HandleHealthChanged);
-    }
-
-    private void OnDestroy()
-    {
-        OnHealthChanged.RemoveListener(HandleHealthChanged);
-    }
-
-    private void HandleHealthChanged()
+    private void HandleHealthChanged(int newHealth)
     {
         if(newHealth == 0)
         {
             // Handle death
             health = 0;
+
+
+
             if (isDebugging)
             { Debug.Log($"{gameObject.name} has reached 0 health."); }
         }

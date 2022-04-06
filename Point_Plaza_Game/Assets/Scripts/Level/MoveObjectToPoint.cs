@@ -5,6 +5,7 @@ using UnityEngine.Assertions;
 
 public class MoveObjectToPoint : MonoBehaviour
 {
+    [SerializeField] private bool isDebugging = false;
     [SerializeField] private Transform objectToMove = null;
     [SerializeField] private Transform objectToFollow = null;
 
@@ -17,7 +18,9 @@ public class MoveObjectToPoint : MonoBehaviour
 
     private IEnumerator Move()
     {
-        Debug.Log("Move");
+        if (isDebugging)
+        { Debug.Log("Move"); }
+
         objectToMove.position = Vector3.MoveTowards(objectToMove.position, objectToFollow.position, 0.01f);
         yield return new WaitForEndOfFrame();
         if (objectToMove.position != objectToFollow.position)

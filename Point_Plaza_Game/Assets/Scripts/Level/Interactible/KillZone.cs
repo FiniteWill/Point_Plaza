@@ -14,7 +14,7 @@ public class KillZone : MonoBehaviour
 
     private void Awake()
     {
-        Assert.IsNotNull(interactibleTags, $"{this.name} does not have any tags specified for interaction.");
+        Assert.IsNotNull(interactibleTags, $"{name} does not have any tags specified for interaction.");
         collider = GetComponent<Collider2D>();
         collider.isTrigger = true;
     }
@@ -23,7 +23,7 @@ public class KillZone : MonoBehaviour
     {
         if (!isPaused)
         {
-            Debug.Log($"{other.name} has triggered {this.name}");
+            Debug.Log($"{other.name} has triggered {name}");
 
             foreach (string tag in interactibleTags)
             {
@@ -32,7 +32,7 @@ public class KillZone : MonoBehaviour
                     // Affect health
                     Health entityHealth = other.GetComponent<Health>();
                     if (entityHealth != null)
-                    { entityHealth.health = 0; }
+                    { entityHealth.SetHealth(0); }
                     else { Debug.Log($"{other.name} does not have an attached {nameof(entityHealth)}"); }
                 }
             }
