@@ -6,7 +6,7 @@ using UnityEngine.Assertions;
 /// <summary>
 /// Script that handles Player controls for a character in one of the platformer games.
 /// </summary>
-public class PlatformerPlayer : MonoBehaviour
+public class PlatformerPlayer : MonoBehaviour, IPlayer
 {
     // Debug mode
     [SerializeField] private bool isDebugging = false;
