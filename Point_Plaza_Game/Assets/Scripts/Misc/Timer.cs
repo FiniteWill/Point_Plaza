@@ -1,15 +1,22 @@
 using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
 
 public class Timer : MonoBehaviour
 {
+    /// <summary>
+    /// Time limit for the current activity. (In seconds).
+    /// </summary>
+    [SerializeField] private int timeLimit = 60;
     [SerializeField] private Text display = null;
+
     private int seconds = 0;
     private int minutes = 0;
     private WaitForSecondsRealtime oneSecond = new WaitForSecondsRealtime(1f);
+
+    public event Action onTimeLimitReached;
 
     private void Awake()
     {
@@ -18,7 +25,7 @@ public class Timer : MonoBehaviour
     }
 
 
-    IEnumerator Tick()
+    private IEnumerator Tick()
     {
         if(seconds == 60)
         {
@@ -31,5 +38,10 @@ public class Timer : MonoBehaviour
         yield return oneSecond;
         if(minutes < 60)
         { StartCoroutine(Tick()); }
+    }
+
+    private void HandleTimeLimitReached()
+    {
+        onTimeLimitReached?.Invoke();
     }
 }
