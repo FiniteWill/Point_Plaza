@@ -2,15 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
+using Enums;
 
-public enum PlatformerAnimationState { Idle, RunLeft, RunRight, JumpLeft, JumpRight, JumpUp, TakeDamage, Die };
 public class PlatformerPlayer_Animator : MonoBehaviour
 {
-    
-    private PlatformerAnimationState currentState = PlatformerAnimationState.Idle;
     [SerializeField] private Dictionary<PlatformerAnimationState, Animation> animationDictionary = null;
     [SerializeField] private List<PlatformerAnimationState> animationStates = null;
     [SerializeField] private List<Animation> animations = null;
+
+    private IEnumerator CR_PlayAnimation = null;
+    private WaitForSeconds playAnimationDelay = new WaitForSeconds(0.1f);
+    private PlatformerAnimationState currentState = PlatformerAnimationState.Idle;
+    public PlatformerAnimationState GetAnimationState() { return currentState; }
+    public void SetAnimationState(PlatformerAnimationState state) { currentState = state; }
 
     private void Awake()
     {
@@ -20,21 +24,21 @@ public class PlatformerPlayer_Animator : MonoBehaviour
         Assert.IsTrue(animationStates.Count == animations.Count, $"{this.name} does not have an equal number of {nameof(animations)} and {nameof(animationStates)}.");
         if(animationStates.Count == animations.Count)
         {
-            foreach(Animation animation in animations)
+            for(int i=0; i<animations.Count; ++i)
             {
-                foreach(PlatformerAnimationState state in animationStates)
-                {
-                    animationDictionary.Add(state, animation);
-                }
+                animationDictionary.Add(animationStates[i], animations[i]);
             }
         }
+        CR_PlayAnimation = PlayAnimationCR();
     }
 
-    // Update is called once per frame
-    void Update()
+    private IEnumerator PlayAnimationCR()
     {
         animationDictionary.TryGetValue(currentState, out Animation temp);
         if (!temp.isPlaying)
         { temp.Play(); }
+        yield return playAnimationDelay;
+        StartCoroutine(CR_PlayAnimation);
     }
+
 }

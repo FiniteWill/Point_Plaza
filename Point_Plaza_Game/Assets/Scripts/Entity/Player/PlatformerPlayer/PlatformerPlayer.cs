@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
+using Enums;
 
 /// <summary>
 /// Script that handles Player controls for a character in one of the platformer games.
@@ -35,7 +34,8 @@ public class PlatformerPlayer : MonoBehaviour, IPlayer
     private void SetAnimationState()
     {
         // Check what movement the player is performing 
-
+        PlatformerAnimationState curState = playerMovement.GetAnimationState();
+        playerAnimator.SetAnimationState(curState);
     }
 
 }

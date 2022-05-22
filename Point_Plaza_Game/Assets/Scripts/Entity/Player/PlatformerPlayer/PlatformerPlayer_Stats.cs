@@ -1,24 +1,14 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Handles health and damage as well as any other stats directly related to the PlatformerPlayer.
+/// </summary>
 public class PlatformerPlayer_Stats : MonoBehaviour
 {
-
-    private int score { get => score; set => score = value; }
-    private const int DEFAULT_HEALTH = 3;
-    private int health = DEFAULT_HEALTH;
-    
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    // Score
+    private int curScore;
+    public int score { get => curScore; set => curScore = value; }
+    [SerializeField] private Health health = null;
 }

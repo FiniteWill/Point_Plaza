@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
+using Enums;
 
 public class PlatformerPlayer_Movement : MonoBehaviour
 {
@@ -9,6 +8,7 @@ public class PlatformerPlayer_Movement : MonoBehaviour
 
     // Animation state
     private PlatformerAnimationState animationState = PlatformerAnimationState.Idle;
+    public PlatformerAnimationState GetAnimationState() { return animationState; }
 
     // Movement Constants
     private const float HORIZONTAL_SPEED = 5.0f;
@@ -47,6 +47,9 @@ public class PlatformerPlayer_Movement : MonoBehaviour
         GroundCheck();
     }
 
+    /// <summary>
+    /// Detects input and executes movement.
+    /// </summary>
     private void Movement()
     {
         // Horizontal Movement
@@ -86,6 +89,9 @@ public class PlatformerPlayer_Movement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Checks if the player is touching the ground.
+    /// </summary>
     private void GroundCheck()
     {
         isGrounded = false;
@@ -120,5 +126,14 @@ public class PlatformerPlayer_Movement : MonoBehaviour
                 new Vector2(playerCollider.bounds.max.x, playerCollider.bounds.min.y - GROUND_CHECK_OFFSET - GROUND_CHECK_DIST), Color.red);
 
         }
+    }
+
+    /// <summary>
+    /// Handles movement caused by taking damage;
+    /// </summary>
+    private void DamagedMovement(float power, Vector2 direction)
+    {
+        rgbd2D.AddForce(power * -direction);
+        animationState = PlatformerAnimationState.TakeDamage;
     }
 }
