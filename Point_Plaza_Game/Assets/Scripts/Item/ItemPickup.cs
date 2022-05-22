@@ -3,15 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 
+
 public class ItemPickup : MonoBehaviour
 {
-    [SerializeField] private GameObject item = null;
+    [SerializeField] private bool isDebugging = false;
+    [SerializeField] private GameObject itemPickup = null;
     [SerializeField] private string[] interactibleTags = null;
-    [SerializeField] private Item itemDefinition = Item.Debug; 
+    [SerializeField] private int itemID = 0;
+    private ItemDefinitions.Item item;
+    //[SerializeField] private ItemDefinitions.Item itemType = ItemDefinitions.Item.Debug; 
 
     private void Awake()
     {
-        Assert.IsNotNull($"{this.name} does not have a {nameof(item)} but requires one.");
+        Assert.IsNotNull($"{this.name} does not have a {nameof(itemPickup)} but requires one.");
+        item = ItemDefinitions.GetItem(itemID);
     }
 
 
@@ -21,25 +26,18 @@ public class ItemPickup : MonoBehaviour
         {
             foreach (string tag in interactibleTags)
             {
-                if (collision.CompareTag(tag)) { HandleEffect(); }
+                if (collision.CompareTag(tag)) { HandleEffect(collision); }
             }
         }
     }
 
-    private void HandleEffect()
+    private void HandleEffect(Collider2D collision)
     {
         gameObject.SetActive(false);
+        Health tempHealth = collision.GetComponentInChildren<Health>();
 
         // TODO: Define behaviors for item pickup
-        switch(itemDefinition)
-        {
-            case Item.Debug:
-                Debug.Log($"{this.name} was successfully collected.");
-                break;
-            case Item.SmallHealthBoost:
-                break;
-            default:
-                break;
-        }
+        if (isDebugging) { Debug.Log($"{name} was sucessfully collected."); }
+        //switch()
     }
 }
