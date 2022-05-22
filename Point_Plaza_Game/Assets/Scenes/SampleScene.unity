@@ -269,6 +269,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 115b3e5c64761c244b64ec25a68e6413, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timeLimit: 60
   display: {fileID: 1158553108}
 --- !u!4 &239974420
 Transform:
@@ -938,9 +939,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isDebugging: 0
   isVulnerable: 1
-  OnHealthChanged:
-    m_PersistentCalls:
-      m_Calls: []
+  health: 0
 --- !u!1 &987636924
 GameObject:
   m_ObjectHideFlags: 0
@@ -1491,6 +1490,7 @@ GameObject:
   - component: {fileID: 1768050181}
   - component: {fileID: 1768050179}
   - component: {fileID: 1768050178}
+  - component: {fileID: 1768050182}
   m_Layer: 0
   m_Name: Enemy1Charger
   m_TagString: Enemy
@@ -1620,6 +1620,21 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 1, y: 2}
   m_Direction: 0
+--- !u!114 &1768050182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1768050176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07f7f3289aad3ed438edd6880fc347ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isDebugging: 0
+  isVulnerable: 1
+  health: 0
 --- !u!1 &2052512059
 GameObject:
   m_ObjectHideFlags: 0
