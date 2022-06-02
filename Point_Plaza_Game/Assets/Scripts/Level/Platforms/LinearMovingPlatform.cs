@@ -7,12 +7,14 @@ using UnityEngine.Assertions;
 /// </summary>
 public class LinearMovingPlatform : MonoBehaviour
 {
+    private static readonly WaitForEndOfFrame s_waitFrame = new WaitForEndOfFrame();
+
+    [SerializeField] private bool isDebugging = false;
     [SerializeField] private Transform[] positions = null;
-    [SerializeField] private float movementDelay = 3f;
+    [SerializeField] private WaitForSeconds movementDelay = new WaitForSeconds(3f);
     [SerializeField] private Transform platform = null;
     [SerializeField] [Min(0f)] float speed = 1f;
 
-    private IEnumerator CR_MoveDelay;
     private int curPos;
     private Transform playerParent = null;
     private bool isMoving = true;
@@ -24,55 +26,44 @@ public class LinearMovingPlatform : MonoBehaviour
     {
         Assert.IsNotNull(platform, $"{name} does not have a {platform.GetType()} to move.");
         Assert.IsNotNull(positions, $"{name} does not have a serialized teleport position {positions.GetType()}");
-        CR_MoveDelay = MoveDelayCR();
-        StartCoroutine(CR_MoveDelay);
+        StartCoroutine(MovePlatform());
     }
-
-    private void OnEnable()
-    {
-        StartCoroutine(CR_MoveDelay);
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         // Child the player object to this platform on initial contact.
-        if (collision.collider.GetComponent<IPlayer>() == null) { return; }
-        playerParent = collision.collider.transform.parent;
-        collision.collider.transform.parent = platform.transform;
+        if (other.GetComponent<IPlayer>() == null) { return; }
+        if (isDebugging) { Debug.Log($"{name} collided with {other.name} which has an attached {nameof(IPlayer)}"); }
+        other.transform.parent = platform.transform;
     }
-    private void OnCollisionExit2D(Collision2D collision)
+    private void OnTriggerExit2D(Collider2D other)
     {
         // Reset the player object's parent after leaving contact.
-        if (collision.collider.GetComponent<IPlayer>() == null) { return; }
-        if (playerParent != null) { collision.collider.transform.parent = playerParent; }
-    }
-
-    private void Update()
-    {
-        if (isMoving && platform.position != positions[curPos].position)
-        {
-            float step = speed * Time.deltaTime;
-            Vector3.MoveTowards(platform.position, positions[curPos].position, step);
-        }
-        else
-        {
-            StartCoroutine(CR_MoveDelay);
-        }
+        if (other.GetComponent<IPlayer>() == null) { return; }
+        if (isDebugging) { Debug.Log($"{name} has stopped colliding with {other.name} which has an attached {nameof(IPlayer)}"); }
+        other.transform.parent = null;
     }
 
     /// <summary>
     /// Sets isMoving to false, iterates the list of target positions, and waits before allowing the platform to move again.
     /// </summary>
     /// <returns></returns>
-    private IEnumerator MoveDelayCR()
+    private IEnumerator MovePlatform()
     {
-        isMoving = false;
-        curPos += 1 % positions.Length;
-        yield return new WaitForSeconds(movementDelay);
-        isMoving = true;
+        while (transform.position != positions[curPos].position)
+        {
+            Move();
+            yield return s_waitFrame;
+        }
+        yield return movementDelay;
+        curPos++;
+        if(curPos > positions.Length-1) { curPos = 0; }
+        StartCoroutine(MovePlatform());
     }
 
     public void Move()
     {
+        float step = speed * Time.deltaTime;
+        platform.position = Vector3.MoveTowards(platform.position, positions[curPos].position, step);
+        if (isDebugging) { Debug.Log($"{name} is at {platform.position} and its target is {positions[curPos].position}"); }
     }
 }
