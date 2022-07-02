@@ -12,7 +12,7 @@ public class DamageZone : MonoBehaviour
     [SerializeField] private float damageDelay = 3f;
     [SerializeField] private List<string> interactibleTags = null;
 
-    private Collider2D collider;
+    private Collider2D zoneCollider;
     private List<Health> damagedEntities = new List<Health>();
 
     public bool isPaused = false;
@@ -20,8 +20,8 @@ public class DamageZone : MonoBehaviour
     private void Awake()
     {
         Assert.IsNotNull(interactibleTags, $"{name} does not have any tags specified for interaction.");
-        collider = GetComponent<Collider2D>();
-        collider.isTrigger = true;
+        zoneCollider = GetComponent<Collider2D>();
+        zoneCollider.isTrigger = true;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -36,7 +36,7 @@ public class DamageZone : MonoBehaviour
                 {
                     // Affect health
                     Health entityHealth = other.GetComponent<Health>();
-                    if (entityHealth != null)
+                    if (entityHealth != null && !damagedEntities.Contains(entityHealth))
                     {
                         if (isKillZone) { entityHealth.SetHealth(0); }
                         else 
