@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.SceneManagement;
 
 public class PlayerCamera : MonoBehaviour
 {
@@ -16,9 +15,8 @@ public class PlayerCamera : MonoBehaviour
 
     private void Awake()
     {
-        Assert.IsNotNull(player, $"{this.name} could not find a {nameof(player)} but requires one.");
-        Assert.IsNotNull(player, $"{this.name} could not find a {nameof(player)} but requires one.");
         Assert.IsNotNull(cam, $"{this.name} does not have a {nameof(cam)} but requires one.");
+        SceneManager.sceneLoaded += SetPlayerDe;
     }
 
     // Update is called once per frame
@@ -29,20 +27,26 @@ public class PlayerCamera : MonoBehaviour
         { Debug.Log($"Is Moving, Target Pos: {player.transform.position} and Current Pos: {cam.transform.position}"); }
     }
 
-
     /// <summary>
     /// Function that moves the given GameObject to follow its target.
     /// </summary>
     private void Move()
     {
+        if(player == null) { return; }
         Vector3 targetPos = Vector3.zero;
         targetPos = new Vector3(player.transform.position.x, player.transform.position.y, zDepth);
         cam.transform.position = Vector3.Lerp(cam.transform.position, targetPos, smoothingFactor * Time.fixedDeltaTime);
-        //objectToMove.transform.position = targetPos;
     }
-
     public void SnapToObject()
     {
         cam.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, zDepth);
+    }
+
+    public void SetPlayerDe(Scene scene, LoadSceneMode loadMode)
+    {
+        player = FindObjectOfType<PlatformerPlayer_Movement>().gameObject;
+        Debug.Log($"{name} called SetPlayer on scene load. Found {player.name}.");
+        Assert.IsNotNull(player);
+        SnapToObject();
     }
 }
