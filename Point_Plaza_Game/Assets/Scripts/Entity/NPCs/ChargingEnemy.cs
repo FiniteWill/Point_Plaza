@@ -1,10 +1,11 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 
 public class ChargingEnemy : MonoBehaviour
 {
+    private static WaitForSeconds s_checkDelay;
+
     [SerializeField] private bool isDebugging = false;
     [SerializeField] private Vector2 directionToCharge = Vector2.zero;
     [SerializeField] private Vector2 raycastOffset = Vector2.zero;
@@ -18,6 +19,7 @@ public class ChargingEnemy : MonoBehaviour
     {
         Assert.IsNotNull($"{this.name} does not have a {nameof(rgbd2D)} but is required.");
         StartCoroutine(CheckForPlayer());
+        s_checkDelay = new WaitForSeconds(hesitation);
     }
 
 
@@ -38,10 +40,11 @@ public class ChargingEnemy : MonoBehaviour
             if(chargeCheck.collider.CompareTag("Player"))
             { Charge(); }
         }
-        yield return new WaitForSeconds(hesitation);
+        yield return s_checkDelay;
+        StartCoroutine(CheckForPlayer());
     }
 
-    private void  Charge()
+    private void Charge()
     {
         rgbd2D.AddForce(directionToCharge * chargeSpeed);
     }
