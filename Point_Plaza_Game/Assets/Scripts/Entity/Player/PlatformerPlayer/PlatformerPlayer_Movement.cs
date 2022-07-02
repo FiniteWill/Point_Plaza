@@ -1,91 +1,99 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.InputSystem;
 using Enums;
 
-public class PlatformerPlayer_Movement : MonoBehaviour
+public class PlatformerPlayer_Movement : MonoBehaviour, PointPlaza_Input.IPlayerActions
 {
+    // Movement Constants
+    private const float MAX_HORIZ_SPEED = 25f;
+    private const float HORIZONTAL_SPEED = 5f;
+    private const float JUMP_SPEED = 300.0f;
+    private static Vector2 s_leftMovementForce = new Vector2(-HORIZONTAL_SPEED, 0f);
+    private static Vector2 s_rightMovementForce = new Vector2(HORIZONTAL_SPEED, 0f);
+    private static PlayerInput s_playerInput;
+    private static InputAction s_movement;
+    // GroundCheck() constants
+    private const float GROUND_CHECK_DIST = 0.1f;
+    private const float GROUND_CHECK_OFFSET = 0.05f;
+    private const string GROUND_TAG = "Ground";
+
     [SerializeField] private bool isDebugging = true;
 
     // Animation state
     private PlatformerAnimationState animationState = PlatformerAnimationState.Idle;
     public PlatformerAnimationState GetAnimationState() { return animationState; }
 
-    // Movement Constants
-    private const float HORIZONTAL_SPEED = 5.0f;
-    private const float JUMP_SPEED = 600.0f;
-
-    // Movement Bindings
-    private readonly KeyCode moveLeftControl = KeyCode.A;
-    private readonly KeyCode moveRightControl = KeyCode.D;
-    private readonly KeyCode jumpControl = KeyCode.Space;
-
     // Player components
     [SerializeField] private Rigidbody2D rgbd2D = null;
     [SerializeField] private BoxCollider2D playerCollider = null;
 
-    // GroundCheck() constants
-    private const float GROUND_CHECK_DIST = 0.1f;
-    private const float GROUND_CHECK_OFFSET = 0.05f;
-    private const string GROUND_TAG = "Ground";
+
 
     private bool isGrounded = false;
 
     private void Awake()
     {
-        Assert.IsNotNull(playerCollider, $"{this.name} does not have a serialized {nameof(playerCollider)} but requires one.");
-        Assert.IsNotNull(rgbd2D, $"{this.name} does not have a serialized {nameof(rgbd2D)} but requires one.");
+        Assert.IsNotNull(playerCollider, $"{name} does not have a serialized {nameof(playerCollider)} but requires one.");
+        Assert.IsNotNull(rgbd2D, $"{name} does not have a serialized {nameof(rgbd2D)} but requires one.");
         if (rgbd2D != null)
         {
-            rgbd2D.freezeRotation = true;
+            rgbd2D.freezeRotation = true; 
         }
+        s_playerInput = transform.root.GetComponentInChildren<PlayerInput>();
+        s_movement = s_playerInput.currentActionMap.FindAction("Move", true);
     }
 
     // Update is called once per frame
     private void Update()
     {
-        Movement(); 
+        NewMove(s_movement.ReadValue<Vector2>().x);
         GroundCheck();
     }
 
-    /// <summary>
-    /// Detects input and executes movement.
-    /// </summary>
-    private void Movement()
+    public void Jump()
     {
-        // Horizontal Movement
-        if (Input.GetKey(moveLeftControl))
-        { 
-            // Apply force in the left direction and set the animation state
-            rgbd2D.AddForce(new Vector2(-HORIZONTAL_SPEED, 0.0f));
-            animationState = PlatformerAnimationState.RunLeft;
-        }
-        else if (Input.GetKey(moveRightControl))
+        if(isGrounded)
         {
-            // Apply force in the right direction and set the animation state
-            rgbd2D.AddForce(new Vector2(HORIZONTAL_SPEED, 0.0f));
+            // Apply jump force and then change the animation state based on which way the player was moving
+            if (rgbd2D.velocity.x > 5f || rgbd2D.velocity.x < -5f)
+            {
+                rgbd2D.AddForce(new Vector2(0.0f, JUMP_SPEED * 0.75f));
+            }
+            else { rgbd2D.AddForce(new Vector2(0, JUMP_SPEED)); }
+            if (animationState == PlatformerAnimationState.RunLeft)
+            {
+                animationState = PlatformerAnimationState.JumpLeft;
+            }
+            else if (animationState == PlatformerAnimationState.RunRight)
+            {
+                animationState = PlatformerAnimationState.JumpRight;
+            }
+            else
+            {
+                animationState = PlatformerAnimationState.JumpUp;
+            }
+        }
+    }
+
+    private void NewMove(float horizontal)
+    {
+        if(horizontal > 0) 
+        {
+            if (rgbd2D.velocity.x < MAX_HORIZ_SPEED)
+            {
+                rgbd2D.AddForce(s_rightMovementForce);
+            }
             animationState = PlatformerAnimationState.RunRight;
         }
-
-        // Jumping
-        if (Input.GetKeyDown(jumpControl))
+        else if(horizontal < 0)
         {
-            if (isGrounded)
+            if (rgbd2D.velocity.x > -MAX_HORIZ_SPEED)
             {
-                // Apply jump force and then change the animation state based on which way the player was moving
-                rgbd2D.AddForce(new Vector2(0.0f, JUMP_SPEED));
-                if (animationState == PlatformerAnimationState.RunLeft)
-                { 
-                    animationState = PlatformerAnimationState.JumpLeft; 
-                }
-                else if (animationState == PlatformerAnimationState.RunRight)
-                { 
-                    animationState = PlatformerAnimationState.JumpRight;
-                }
-                else
-                {
-                    animationState = PlatformerAnimationState.JumpUp;
-                }
+                rgbd2D.AddForce(s_leftMovementForce);
             }
+            animationState = PlatformerAnimationState.RunLeft;
         }
     }
 
@@ -135,5 +143,37 @@ public class PlatformerPlayer_Movement : MonoBehaviour
     {
         rgbd2D.AddForce(power * -direction);
         animationState = PlatformerAnimationState.TakeDamage;
+    }
+
+    // Implemented functions of IPlayerActions
+
+    public void OnMove(InputAction.CallbackContext context)
+    {
+
+    }
+
+    public void OnLook(InputAction.CallbackContext context)
+    {
+    }
+
+    public void OnFire(InputAction.CallbackContext context)
+    {
+    }
+
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        Jump();
+    }
+
+    public void OnMenu(InputAction.CallbackContext context)
+    {
+    }
+
+    public void OnStart(InputAction.CallbackContext context)
+    {
+    }
+
+    public void OnSelect(InputAction.CallbackContext context)
+    {
     }
 }

@@ -6,6 +6,8 @@ using UnityEngine.EventSystems;
 public class PlatformPlayerAnimator : MonoBehaviour, IEntityAnimator
 {
     private Dictionary<Animation, int> animationList = null;
+    private Animator animator = null;
+
     private void Awake()
     {
         Assert.IsNotNull(animationList);
