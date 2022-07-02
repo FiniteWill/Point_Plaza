@@ -8,7 +8,9 @@ using UnityEngine;
 public class PlatformerPlayer_Stats : MonoBehaviour
 {
     // Score
-    private int curScore;
-    public int score { get => curScore; set => curScore = value; }
+    public int curScore { get; private set; }
+    //public ItemDefinitions.EquipItem[] equipmentSlots = new ItemDefinitions.EquipItem[2] {ItemDefinitions.s_noArmor, ItemDefinitions.s_noWeapon};
+    public List<ItemDefinitions.Item> inventory = null;
     [SerializeField] private Health health = null;
+
 }

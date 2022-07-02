@@ -23,11 +23,6 @@ public class PlatformerPlayer : MonoBehaviour, IPlayer
         Assert.IsNotNull(playerStats, $"{this.name} does not have a {nameof(playerStats)} assigned but requires one.");
     }
 
-    private void Update()
-    {
-        
-    }
-
     /// <summary>
     /// Checks the player's current status and sets the animation state on the animator accordingly.
     /// </summary>

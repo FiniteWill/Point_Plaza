@@ -9,8 +9,17 @@ using UnityEngine.Assertions;
 public class GameOverHandler : MonoBehaviour
 {
     [SerializeField] private List<Game> games = null;
+
+
     private void Awake()
     {
         Assert.IsNotNull(games, $"{name} does not have a serialized {games.GetType()} but requires one.");
+        if(games != null)
+        {
+            foreach(Game g in games)
+            {
+                
+            }
+        }
     }
 }
