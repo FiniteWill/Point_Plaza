@@ -18,11 +18,22 @@ public class ItemDefinitions : MonoBehaviour
     public const int GOOD_EQUIP = 5;
     public const int POW_EQUIP = 7;
 
+    public const int DEFAULT_ITEM_ID = 0;
+    public const int NO_ARMOR_ID = 1;
+    public const int NO_WEAPON_ID = 2;
+
+    public static Item s_defaultItem = new Item(false, ItemType.HealthItem, 0, 0, "DEFAULT ITEM");
+    public static Item s_noArmor = new Item(false, EquipmentSlot.Weapon, 0, 1, "NO ARMOR");
+    public static Item s_noWeapon = new Item(false, EquipmentSlot.Weapon, 0, 2, "NO WEAPON");
+
     private static int index = 0;
 
     public static List<Item> totalInventoryList =
         new List<Item>()
         {
+            new Item(true, ItemType.HealthItem, 0, index, "DEFAULT ITEM"),
+            new Item(true, EquipmentSlot.Armor, 0, index, "NO ARMOR"),
+            new Item(true, EquipmentSlot.Weapon, 0, index, "NO WEAPON"),
             new Item(true, ItemType.HealthItem, SMALL_HEALTH_BOOST, index, "Small Health Boost"),
             new Item(true, ItemType.HealthItem, MED_HEALTH_BOOST, index, "Medium Health Boost"),
             new Item(true, ItemType.StatItem, SMALL_SPEED_BOOST, index, "Small Speed Boost"),
@@ -39,6 +50,7 @@ public class ItemDefinitions : MonoBehaviour
         }
         return new Item();
     }
+
     public enum EquipmentSlot
     {
         Weapon,
@@ -73,7 +85,7 @@ public class ItemDefinitions : MonoBehaviour
                     itemObj = new StatItem(SMALL_SPEED_BOOST, false, id, name);
                     break;
                 case ItemType.EquipItem:
-                    itemObj = new EquipItem(WEAK_EQUIP, id, name);
+                    itemObj = new EquipmentItem(WEAK_EQUIP, id, name);
                     break;
                 default:
                     itemObj = new HealthItem(SMALL_HEALTH_BOOST, id, name);
@@ -93,7 +105,7 @@ public class ItemDefinitions : MonoBehaviour
                     itemObj = new StatItem(val, false, id, name);
                     break;
                 case ItemType.EquipItem:
-                    itemObj = new EquipItem(val, id, name);
+                    itemObj = new EquipmentItem(val, id, name);
                     break;
                 default:
                     itemObj = new HealthItem(val, id, name);
@@ -114,7 +126,7 @@ public class ItemDefinitions : MonoBehaviour
                     itemObj = new StatItem(val, false, id, name);
                     break;
                 case ItemType.EquipItem:
-                    itemObj = new EquipItem(val, id, name);
+                    itemObj = new EquipmentItem(val, id, name);
                     break;
                 default:
                     itemObj = new HealthItem(val, id, name);
@@ -125,14 +137,14 @@ public class ItemDefinitions : MonoBehaviour
         {
             this.id = id;
             this.name = name;
-            itemObj = new EquipItem(equipType, val, id, name);
+            itemObj = new EquipmentItem(equipType, val, id, name);
         }
         public Item(bool usingIndexer, EquipmentSlot equipType, int val, int id, string name)
         {
             this.id = id;
             id = usingIndexer ? id + 1 : id;
             this.name = name;
-            itemObj = new EquipItem(equipType, val, id, name);
+            itemObj = new EquipmentItem(equipType, val, id, name);
         }
         #endregion constructors
         public static bool operator ==(Item i, int id) { return i.ID().Equals(id); }
@@ -201,41 +213,41 @@ public class ItemDefinitions : MonoBehaviour
         }
     }
 
-    public struct EquipItem
+    public struct EquipmentItem
     {
         private readonly int id;
         private readonly string name;
         private readonly int equipmentStat;
         private EquipmentSlot slotType;
-        public EquipItem(EquipmentSlot slot)
+        public EquipmentItem(EquipmentSlot slot)
         {
             slotType = slot;
             equipmentStat = 0;
             id = 0;
             name = "DEFAULT EQUIP ITEM";
         }
-        public EquipItem(int stat)
+        public EquipmentItem(int stat)
         {
             slotType = EquipmentSlot.Armor;
             equipmentStat = stat;
             id = 0;
             name = "DEFAULT EQUIP ITEM";
         }
-        public EquipItem(EquipmentSlot slot, int id, string name)
+        public EquipmentItem(EquipmentSlot slot, int id, string name)
         {
             slotType = slot;
             equipmentStat = 0;
             this.id = id;
             this.name = name;
         }
-        public EquipItem(int stat, int id, string name)
+        public EquipmentItem(int stat, int id, string name)
         {
             slotType = EquipmentSlot.Armor;
             equipmentStat = stat;
             this.id = id;
             this.name = name;
         }
-        public EquipItem(EquipmentSlot slot, int stat, int id, string name)
+        public EquipmentItem(EquipmentSlot slot, int stat, int id, string name)
         {
             slotType = slot;
             equipmentStat = stat;
