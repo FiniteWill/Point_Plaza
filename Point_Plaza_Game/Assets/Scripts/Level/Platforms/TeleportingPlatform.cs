@@ -7,12 +7,12 @@ using UnityEngine.Assertions;
 /// </summary>
 public class TeleportingPlatform : MonoBehaviour
 {
+    [SerializeField] private bool isDebugging = false;
     [SerializeField] private Transform[] positions = null;
     [SerializeField] private float teleportDelay = 3f;
     [SerializeField] private Transform platform = null;
     
-    private IEnumerator CR_Disappear;
-    private int curPos;
+    private int curPos = 0;
     private Transform playerParent = null;
 
     //TODO: Add disappearance and reappearance Animations.
@@ -21,27 +21,21 @@ public class TeleportingPlatform : MonoBehaviour
     {
         Assert.IsNotNull(platform, $"{name} does not have a {platform.GetType()} to teleport.");
         Assert.IsNotNull(positions, $"{name} does not have a serialized teleport position {positions.GetType()}");
-        CR_Disappear = Disappear();
-        StartCoroutine(CR_Disappear);
+        StartCoroutine(Disappear());
     }
-
-    private void OnEnable()
-    {
-        StartCoroutine(CR_Disappear);
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         // Child the player object to this platform on initial contact.
-        if (collision.collider.GetComponent<IPlayer>() == null) { return; }
-        playerParent = collision.collider.transform.parent;
-        collision.collider.transform.parent = platform.transform;
+        if (other.GetComponent<IPlayer>() == null) { return; }
+        if (isDebugging) { Debug.Log($"{name} collided with {other.name} which has an attached {nameof(IPlayer)}"); }
+        other.transform.parent = platform.transform;
     }
-    private void OnCollisionExit2D(Collision2D collision)
+    private void OnTriggerExit2D(Collider2D other)
     {
         // Reset the player object's parent after leaving contact.
-        if (collision.collider.GetComponent<IPlayer>() == null) { return; }
-        if (playerParent != null) { collision.collider.transform.parent = playerParent; }
+        if (other.GetComponent<IPlayer>() == null) { return; }
+        if (isDebugging) { Debug.Log($"{name} has stopped colliding with {other.name} which has an attached {nameof(IPlayer)}"); }
+        other.transform.parent = null;
     }
 
     /// <summary>
@@ -53,12 +47,14 @@ public class TeleportingPlatform : MonoBehaviour
     {
         Move();
         yield return new WaitForSeconds(teleportDelay);
-        StartCoroutine(CR_Disappear);
+        StartCoroutine(Disappear());
     }
 
     public void Move()
     {
-        curPos += 1 % positions.Length;
         platform.position = positions[curPos].position;
+        curPos++;
+        if (curPos > positions.Length - 1) { curPos = 0; }
+
     }
 }

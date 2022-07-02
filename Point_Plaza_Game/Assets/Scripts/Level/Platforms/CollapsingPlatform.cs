@@ -7,10 +7,11 @@ using UnityEngine.Assertions;
 /// </summary>
 public class CollapsingPlatform : MonoBehaviour
 {
+    [SerializeField] private bool isDebugging = false;
     /// <summary>
     /// The list of tags for entities that can collapse the platform.
     /// </summary>
-    [SerializeField] private string[] collapsedByEntities;
+    [SerializeField] private string[] interactibleTags;
     /// <summary>
     /// How fast the platform falls when collapsing.
     /// </summary>
@@ -44,23 +45,19 @@ public class CollapsingPlatform : MonoBehaviour
         Assert.IsNotNull(reappearanceAnim, $"{name} does not have a reappearance {reappearanceAnim}");
         originalPosition = transform.position;
     }
-
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        // Set the player's transform to be a child of the platform, playe the disappearance Animation, and handle disappearance.
-        if (collision.collider.GetComponent<IPlayer>() == null) { return; }
-        playerParent = collision.collider.transform.parent;
-        collision.collider.transform.parent = platform.transform;
-
-        disappearanceAnim.Play();
-        if (!collapseIsRunning) { StartCoroutine(CR_Collapse); }
+        // Child the player object to this platform on initial contact.
+        if (other.GetComponent<IPlayer>() == null) { return; }
+        if (isDebugging) { Debug.Log($"{name} collided with {other.name} which has an attached {nameof(IPlayer)}"); }
+        other.transform.parent = platform.transform;
     }
-
-    private void OnCollisionExit2D(Collision2D collision)
+    private void OnTriggerExit2D(Collider2D other)
     {
-        // Reset the player's parent after leaving contact.
-        if(collision.collider.GetComponent<IPlayer>() == null) { return; }
-        if (playerParent != null) { collision.collider.transform.parent = playerParent; }
+        // Reset the player object's parent after leaving contact.
+        if (other.GetComponent<IPlayer>() == null) { return; }
+        if (isDebugging) { Debug.Log($"{name} has stopped colliding with {other.name} which has an attached {nameof(IPlayer)}"); }
+        other.transform.parent = null;
     }
 
 
