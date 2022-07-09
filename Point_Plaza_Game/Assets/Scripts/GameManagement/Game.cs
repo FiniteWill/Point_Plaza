@@ -34,7 +34,10 @@ public class Game : MonoBehaviour
 
     public void HandleGameStart()
     {
-        (player as MonoBehaviour).transform.position = startPos.position;
+        if (startPos != null)
+        {
+            (player as MonoBehaviour).transform.position = startPos.position;
+        }
         onGameStart?.Invoke();
         curScore = 0;
         curLives = startingLives;
@@ -54,7 +57,4 @@ public class Game : MonoBehaviour
         hasStarted = false;
         SceneManagerSingleton.Instance.LoadScene(menuScene);
     }
-
-
-
 }
