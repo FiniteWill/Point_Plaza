@@ -16,6 +16,10 @@ public class Timer : MonoBehaviour
     private static readonly WaitForSecondsRealtime s_oneSecond = new WaitForSecondsRealtime(1f);
 
     /// <summary>
+    /// Whether reaching the time limit causes a gameover to be called on the current game.
+    /// </summary>
+    [SerializeField] private bool timeCausesGameOver = false;
+    /// <summary>
     /// Time limit for the current activity. (In seconds).
     /// </summary>
     [SerializeField, Range(MIN_TIME,MAX_TIME)] private int timeLimit = 60;
@@ -35,8 +39,10 @@ public class Timer : MonoBehaviour
 
     private void Awake()
     {
-        Assert.IsNotNull(display, $"{this.name} does not have a {nameof(display)} but requires one.");
+        Assert.IsNotNull(display, $"{name} does not have a {nameof(display)} but requires one.");
         timeRemaining = timeLimit;
+        secondsLeft = timeLimit % 60;
+        minutesLeft = timeLimit / 60;
         Tuple<int, int> formattedTime = FormatTime(startTime);
         SetTime(formattedTime.Item1, formattedTime.Item2);
         StartCoroutine(Tick());
@@ -52,7 +58,7 @@ public class Timer : MonoBehaviour
         Mathf.Clamp(sec, 0, 60);
         minutesPassed = min;
         secondsPassed = sec;
-        display.text = $"TIME {minutesPassed.ToString("00")}:{secondsPassed.ToString("00")}";
+        display.text = $"TIME {minutesPassed:00}:{secondsPassed:00}";
     }
     /// <summary>
     /// Resets and reformats the timer Text to be empty.
@@ -83,6 +89,7 @@ public class Timer : MonoBehaviour
     {
         ResetTimer();
         onTimeLimitReached?.Invoke();
+        if (timeCausesGameOver) { GameManagerSingleton.Instance.GetGameForCurScene().HandleGameOver(); }
     }
 
     private IEnumerator Tick()
@@ -90,7 +97,7 @@ public class Timer : MonoBehaviour
         curTime++;
         timeRemaining--;
         // Low timer check
-        if(timeRemaining <= 10)
+        if(timeRemaining <= MIN_TIME)
         {
             display.color = Color.red;
         }
@@ -116,11 +123,11 @@ public class Timer : MonoBehaviour
         // Choose format of text
         if (countsDown)
         {
-            display.text = $"TIME {minutesLeft.ToString("00")}:{secondsLeft.ToString("00")}";
+            display.text = $"TIME {minutesLeft:00}:{secondsLeft:00}";
         }
         else
         {
-            display.text = $"TIME {minutesPassed.ToString("00")}:{secondsPassed.ToString("00")}";
+            display.text = $"TIME {minutesPassed:00}:{secondsPassed:00}";
         }
         yield return s_oneSecond;
         if(curTime < timeLimit)

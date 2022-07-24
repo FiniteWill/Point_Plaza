@@ -327,8 +327,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 115b3e5c64761c244b64ec25a68e6413, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeLimit: 60
+  timeCausesGameOver: 1
+  timeLimit: 10
+  startTime: 0
   display: {fileID: 1158553108}
+  countsDown: 1
 --- !u!4 &239974420
 Transform:
   m_ObjectHideFlags: 0
