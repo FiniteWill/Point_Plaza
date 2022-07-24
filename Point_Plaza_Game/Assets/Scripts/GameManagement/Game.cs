@@ -8,10 +8,10 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class Game : MonoBehaviour
 {
-    [SerializeField] private Scene menuScene;
-    public Scene MenuScene => menuScene;
-    [SerializeField] private Scene gameScene;
-    public Scene GameScene => gameScene;
+    [SerializeField] private string menuScene = "MainMenu";
+    public Scene MenuScene => SceneManager.GetSceneByName(menuScene);
+    [SerializeField] private string gameScene = "SampleScene";
+    public Scene GameScene => SceneManager.GetSceneByName(gameScene);
     [SerializeField] private IPlayer player;
     [SerializeField] private Transform startPos;
     [SerializeField] private string gameID;

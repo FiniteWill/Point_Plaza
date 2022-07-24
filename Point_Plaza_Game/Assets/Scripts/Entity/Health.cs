@@ -24,16 +24,31 @@ public class Health : MonoBehaviour
     public event Action<int> onHealthChanged;
     public event Action onHealthReachedZero;
 
+    /// <summary>
+    /// Subtracts absolute value of given value from health if the Health is currently vulnerable.
+    /// </summary>
+    /// <param name="damageToTake"></param>
     public void TakeDamage(int damageToTake)
     {
-        if (isVulnerable) { HandleHealthChanged(health - damageToTake); }
+        if (isVulnerable) { HandleHealthChanged(health - Math.Abs(damageToTake)); }
     }
 
+    /// <summary>
+    /// Adds absolute value of given value to health.
+    /// </summary>
+    /// <param name="healthToGain"></param>
     public void GainHealth(int healthToGain)
     {
-        HandleHealthChanged(health + healthToGain);
+        HandleHealthChanged(health + Math.Abs(healthToGain));
     }
-
+    /// <summary>
+    /// Adds given value to health (can be positive or negative).
+    /// <param name="delta"</param>
+    /// </summary>
+    public void ChangeHealth(int delta)
+    {
+        HandleHealthChanged(health + delta);
+    }
     private void HandleHealthChanged(int newHealth)
     {
         if(newHealth <= 0)
