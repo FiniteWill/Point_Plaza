@@ -19,9 +19,14 @@ public class Game : MonoBehaviour
 
     private int hiScore = 0;
     private int curScore = 0;
+    public int GetScore() { return curScore; }
+    public void ChangeScore(int change) 
+    { 
+        curScore += change;
+    }
     public void AddToScore(int add)
     {
-        curScore = Mathf.Max(0, add);
+        curScore += Mathf.Max(0, add);
     }
     private int startingLives = 3;
     private int curLives = 0;
