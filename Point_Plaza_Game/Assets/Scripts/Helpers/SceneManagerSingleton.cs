@@ -1,10 +1,13 @@
 using System;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.SceneManagement;
 
 public class SceneManagerSingleton : MonoBehaviour
 {
     public static SceneManagerSingleton Instance { get; private set; }
+    public Scene mainScene { get; private set; }
+    public Scene persistentScene { get; private set; }
     public event Action onSceneChanged;
     public event Action<Scene> onSceneChangedTo;
     public event Action<Scene, Scene> onSceneChangedFromTo;
@@ -19,6 +22,8 @@ public class SceneManagerSingleton : MonoBehaviour
         else
         {
             Instance = this;
+            mainScene = SceneManager.GetSceneByName("MainMenu");
+            persistentScene = SceneManager.GetSceneByName("Persistent");
         }
     }
 
@@ -27,7 +32,12 @@ public class SceneManagerSingleton : MonoBehaviour
         onSceneChanged?.Invoke();
         onSceneChangedTo?.Invoke(scene);
         onSceneChangedFromTo?.Invoke(SceneManager.GetActiveScene(), scene);
-        if (scene != null) { SceneManager.LoadSceneAsync(scene.name); }
+        if (scene != null) 
+        {
+            Scene curScene = SceneManager.GetActiveScene();
+            SceneManager.LoadSceneAsync(scene.name, LoadSceneMode.Additive);
+            SceneManager.UnloadSceneAsync(curScene.name);
+        }
     }
 
     public void LoadScene(string sceneName)

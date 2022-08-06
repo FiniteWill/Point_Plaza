@@ -25,6 +25,9 @@ public class GameManagerSingleton : MonoBehaviour
             Instance = this;
         }
         Assert.IsNotNull(games, $"{name} does not have a serialized {games.GetType()} but requires one.");
+    }
+    private void Start()
+    {
         SceneManagerSingleton.Instance.onSceneChangedTo += HandleScene;
     }
     private void OnDestroy()
