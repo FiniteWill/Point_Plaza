@@ -38,3 +38,7 @@ sysinfo.txt
 *.apk
 *.unitypackage
 *.log
+*.log
+Point_Plaza_Game/Logs/shadercompiler-UnityShaderCompiler.exe0.log
+Point_Plaza_Game/Logs/shadercompiler-AssetImportWorker0.log
+Point_Plaza_Game/Logs/AssetImportWorker0.log
