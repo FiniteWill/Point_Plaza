@@ -24,9 +24,7 @@ public class SettingsManager : MonoBehaviour
     {
         foreach (var setting in AudioManagerSingleton.Instance.Mixer.FindMatchingGroups(""))
         {
-            float vol;
-            AudioManagerSingleton.Instance.Mixer.GetFloat(setting.name, out vol);
-            Debug.LogError($"Setting is {setting.name} Value is {vol}");
+            AudioManagerSingleton.Instance.Mixer.GetFloat(setting.name, out float vol);
             PlayerPrefs.SetFloat(setting.name, vol);
         }
         PlayerPrefs.Save();
@@ -36,7 +34,6 @@ public class SettingsManager : MonoBehaviour
         foreach(var setting in AudioManagerSingleton.Instance.Mixer.FindMatchingGroups(""))
         {
             var vol = PlayerPrefs.GetFloat(setting.name);
-            Debug.LogError($"Setting is {setting.name} Value is {vol}");
             AudioManagerSingleton.Instance.SetVol(setting.name, vol);
         }
     }

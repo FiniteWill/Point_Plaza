@@ -8,14 +8,20 @@ using UnityEngine.UI;
 [DisallowMultipleComponent]
 public class VolumeSlider : MonoBehaviour
 {
-    private Slider volSlider = null;
+    [SerializeField] private float minVolume = -80;
+    [SerializeField] private float maxVolume = 0;
     [SerializeField] private string mixerGroupName = "Master";
+
+    private Slider volSlider = null;
+
     public string MixerGroupName => mixerGroupName;
 
     private void Awake()
     {
         volSlider = GetComponent<Slider>();
         volSlider.onValueChanged.AddListener(ChangeVol);
+        volSlider.minValue = minVolume;
+        volSlider.maxValue = maxVolume;
     }
 
     private void Start()
