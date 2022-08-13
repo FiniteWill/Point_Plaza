@@ -7,6 +7,7 @@ using UnityEngine.Audio;
 public class AudioManagerSingleton : MonoBehaviour
 {
     [SerializeField] private AudioMixer mixer = null;
+    public AudioMixer Mixer => mixer;
     [SerializeField] private AudioSource[] musicTracks = null;
 
     public static AudioManagerSingleton Instance { get; private set; }

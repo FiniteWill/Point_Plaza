@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +10,7 @@ public class VolumeSlider : MonoBehaviour
 {
     private Slider volSlider = null;
     [SerializeField] private string mixerGroupName = "Master";
+    public string MixerGroupName => mixerGroupName;
 
     private void Awake()
     {
@@ -19,6 +18,21 @@ public class VolumeSlider : MonoBehaviour
         volSlider.onValueChanged.AddListener(ChangeVol);
     }
 
+    private void Start()
+    {
+        if(volSlider != null)
+        {
+            volSlider.value = PlayerPrefs.GetFloat(mixerGroupName);
+        }
+    }
+
+    private void OnEnable()
+    {
+        if(volSlider != null)
+        {
+            volSlider.onValueChanged.AddListener(ChangeVol);
+        }
+    }
     private void OnDisable()
     {
         if(volSlider != null)
