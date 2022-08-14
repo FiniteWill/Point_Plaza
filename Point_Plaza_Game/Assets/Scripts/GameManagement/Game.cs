@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// Holds the data related to a game.
 /// </summary>
-public class Game : MonoBehaviour
+public class Game : MonoBehaviour, ISavable
 {
     [SerializeField] private string menuScene = "MainMenu";
     public Scene MenuScene => SceneManager.GetSceneByName(menuScene);
@@ -61,5 +61,38 @@ public class Game : MonoBehaviour
         hiScore = Mathf.Max(curScore, hiScore);
         hasStarted = false;
         SceneManagerSingleton.Instance.LoadScene(menuScene);
+    }
+
+    private void Save()
+    {
+        SaveData sd = new SaveData();
+        SaveData(sd);
+        // Write data to save file
+        if (FileManager.WriteToFile(FileManager.SAVE_DATA_FILE_NAME, sd.ToJSon()))
+        {
+            Debug.Log($"Saved {name} stats successfully.");
+        }
+    }
+
+    private void Load()
+    {
+        if(FileManager.LoadFromFile(FileManager.SAVE_DATA_FILE_NAME, out var json))
+        {
+            SaveData sd = new SaveData();
+            sd.LoadFromJson(json);
+
+            LoadData(sd);
+            Debug.Log($"Load completed for {name}");
+        }
+    }
+
+    public void SaveData(SaveData data)
+    {
+        data.hiScore = hiScore;
+    }
+
+    public void LoadData(SaveData data)
+    {
+        hiScore = data.hiScore;
     }
 }
