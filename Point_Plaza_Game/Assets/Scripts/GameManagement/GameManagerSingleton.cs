@@ -7,9 +7,11 @@ using UnityEngine.SceneManagement;
 
 public class GameManagerSingleton : MonoBehaviour
 {
+    public static GameManagerSingleton Instance { get; private set; }
+
     [SerializeField] private List<Game> games = null;
 
-    public static GameManagerSingleton Instance { get; private set; }
+    public List<Game> Games => games;
     public Action onLevelLoaded;
 
 

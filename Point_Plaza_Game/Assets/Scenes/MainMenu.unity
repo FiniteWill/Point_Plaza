@@ -8162,6 +8162,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: AchievementDisplay
       objectReference: {fileID: 0}
+    - target: {fileID: 42764482500404300, guid: 898354706bec0084da172b58c1faada5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7916943536809973061, guid: 898354706bec0084da172b58c1faada5, type: 3}
       propertyPath: m_RootOrder
       value: 5

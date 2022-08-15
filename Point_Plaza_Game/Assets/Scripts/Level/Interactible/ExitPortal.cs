@@ -1,10 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ExitPortal : MonoBehaviour, IPausable
 {
+    [SerializeField] private bool endGamePortal = false;
+
     private Game game = null;
+    
     public bool IsPaused { get; private set; } = false;
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -13,7 +14,14 @@ public class ExitPortal : MonoBehaviour, IPausable
         {
             if(collision.CompareTag("Player"))
             {
-                game.HandleGameOver();
+                if (endGamePortal)
+                {
+                    game.HandleGameOver();
+                }
+                else
+                {
+                    
+                }
             }
         }
     }

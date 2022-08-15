@@ -6,8 +6,7 @@ using UnityEngine;
 [Serializable]
 public class SaveData
 {
-    public int hiScore;
-    
+    public GameData[] gameData = new GameData[3];
 
     public string ToJSon()
     {

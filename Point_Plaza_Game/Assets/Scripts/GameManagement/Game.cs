@@ -16,6 +16,11 @@ public class Game : MonoBehaviour, ISavable
     [SerializeField] private Transform startPos;
     [SerializeField] private string gameID;
     public string ID => gameID;
+    [SerializeField] [Min(0)] private int gameIndex = 0;
+
+    private GameData data;
+    public GameData Data => data;
+    private Achievement[] achievements;
 
     private int hiScore = 0;
     private int curScore = 0;
@@ -36,6 +41,12 @@ public class Game : MonoBehaviour, ISavable
     public event Action onGameStart;
     public event Action<bool> onGamePause;
     public event Action onGameOver;
+
+    private void Start()
+    {
+        SaveData saveData = new SaveData();
+        data = saveData.gameData[gameIndex];
+    }
 
     public void HandleGameStart()
     {
@@ -58,8 +69,8 @@ public class Game : MonoBehaviour, ISavable
     public void HandleGameOver()
     {
         onGameOver?.Invoke();
-        hiScore = Mathf.Max(curScore, hiScore);
         hasStarted = false;
+        Save();
         SceneManagerSingleton.Instance.LoadScene(menuScene);
     }
 
@@ -88,11 +99,31 @@ public class Game : MonoBehaviour, ISavable
 
     public void SaveData(SaveData data)
     {
-        data.hiScore = hiScore;
+        data.gameData[gameIndex] = new GameData(gameID, new Achievement[0], Mathf.Max(curScore,hiScore));
     }
 
     public void LoadData(SaveData data)
     {
-        hiScore = data.hiScore;
+        hiScore = data.gameData[gameIndex].hiScore;
+    }
+}
+
+public struct GameData
+{
+    public string gameTitle;
+    public int hiScore;
+    public Achievement[] achievements;
+
+    public GameData(string name, Achievement[] achievements)
+    {
+        gameTitle = name;
+        hiScore = 0;
+        this.achievements = achievements;
+    }
+    public GameData(string name, Achievement[] achievements, int score)
+    {
+        gameTitle = name;
+        hiScore = score;
+        this.achievements = achievements;
     }
 }
