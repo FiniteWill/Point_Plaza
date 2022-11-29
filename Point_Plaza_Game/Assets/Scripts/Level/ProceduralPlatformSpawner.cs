@@ -24,14 +24,21 @@ public class ProceduralPlatformSpawner : MonoBehaviour
     [SerializeField] private float lavaRisingSpeed = 2f;
     [Tooltip("How close the player can get to the last platform before another one spawns.")]
     [SerializeField] private float maxSpawningDist = 20f;
-    private float curHorzPlatformDist = 2f;
-    private float curVertPlatformDist = 2f;
-    private List<GameObject> spawnedObjects;
+
+    private List<GameObject> spawnedObjects = new List<GameObject>();
+    private List<GameObject> spawnedPlatforms = new List<GameObject>();
    
-    
 
     // How many platforms get loaded at the start
     private const int NUM_START_PLATFORMS = 20;
+    // How many platforms to spawn once the player reaches the next max spawning distance
+    private const int NUM_TO_SPAWN = NUM_START_PLATFORMS;
+    private PlatformerPlayer player = null;
+    private PlatformerPlayer_Movement playerMovement = null;
+    // The value (x for horz, y for vert spawning) that the player was at when platforms were last spawned
+    // Used to determine how far the player has to go before next set of platforms spawn
+    private float lastSpawningPoint = 0;
+    
     private void Awake()
     {
         Assert.IsNotNull(platformPrefab);
@@ -41,24 +48,52 @@ public class ProceduralPlatformSpawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        player = FindObjectOfType<PlatformerPlayer>();
+        playerMovement = player.GetComponentInChildren<PlatformerPlayer_Movement>();
+        Assert.IsNotNull(player);
+        Assert.IsNotNull(playerMovement);
+        Assert.IsNotNull(platformPrefab);
+        Assert.IsNotNull(enemyPrefabs);
+        Assert.IsNotNull(itemPrefabs);
+
         // Spawn x amount of platforms
-        for(int i=0; i<NUM_START_PLATFORMS; ++i)
-        {
-            if(Random.Range(0,100) < specialPlatformChance)
-            {
-                var newPlatform = Instantiate(specialPlatformPrefabs[Random.Range(0, specialPlatformPrefabs.Count - 1)]);
-            }
-            else
-            {
-                var newPlatform = Instantiate(platformPrefab);
-            }
-        }
+        SpawnPlatforms(NUM_START_PLATFORMS, lastSpawningPoint, verticalSpawning);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        // Check if the current player position - the last position platforms were spawned at is >= 
+        // the amount of distance the player has to reach before spawning a new batch of platforms
+        if(verticalSpawning && playerMovement.transform.position.y - lastSpawningPoint > maxSpawningDist)
+        {
+            SpawnPlatforms(NUM_TO_SPAWN, lastSpawningPoint, verticalSpawning);
+        }
+        else if(!verticalSpawning && playerMovement.transform.position.x - lastSpawningPoint> maxSpawningDist)
+        {
+            SpawnPlatforms(NUM_TO_SPAWN, lastSpawningPoint, verticalSpawning);
+        }
+    }
+
+
+    private void SpawnPlatforms(int numToSpawn, float curPos, bool isVertical)
+    {
+        for (int i = 0; i < numToSpawn; ++i)
+        {
+            if (Random.Range(0, 100) < specialPlatformChance)
+            {
+                var newPlatform = Instantiate(specialPlatformPrefabs[Random.Range(0, specialPlatformPrefabs.Count - 1)]);
+                Assert.IsNotNull(newPlatform);
+                spawnedObjects.Add(newPlatform);
+                spawnedPlatforms.Add(newPlatform);
+            }
+            else
+            {
+                var newPlatform = Instantiate(platformPrefab);
+                spawnedObjects.Add(newPlatform);
+                spawnedPlatforms.Add(newPlatform);
+            }
+        }
     }
 
     private GameObject GetSpecialPlatform(List<GameObject> platforms)

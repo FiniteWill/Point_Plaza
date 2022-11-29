@@ -142,7 +142,33 @@ public class PlatformerPlayer_Movement : MonoBehaviour, PointPlaza_Input.IPlayer
     private void DamagedMovement(float power, Vector2 direction)
     {
         rgbd2D.AddForce(power * -direction);
+        var tempSR = GetComponentInChildren<SpriteRenderer>();
+        var tempColor = tempSR.color;
+        DamageFlash(2f, tempSR, tempColor);
         animationState = PlatformerAnimationState.TakeDamage;
+    }
+
+    // How much the color of a sprite changes towards and from red each frame when damaged
+    private int DAMAGE_FLASH = 1;
+    private void DamageFlash(float secondsToFlash, SpriteRenderer spriteRenderer, Color startColor)
+    {
+        if (secondsToFlash <= 0) { return; }
+        else 
+        {
+            while (secondsToFlash >= secondsToFlash / 2)
+            {
+                spriteRenderer.color = new Color(spriteRenderer.color.r + DAMAGE_FLASH, spriteRenderer.color.g, spriteRenderer.color.b);
+                secondsToFlash -= Time.deltaTime;
+            }
+
+            while (secondsToFlash >= 0)
+            {
+                spriteRenderer.color = new Color(spriteRenderer.color.r - DAMAGE_FLASH, spriteRenderer.color.g, spriteRenderer.color.b);
+                secondsToFlash -= Time.deltaTime;
+            }
+
+            return;
+        }
     }
 
     // Implemented functions of IPlayerActions
