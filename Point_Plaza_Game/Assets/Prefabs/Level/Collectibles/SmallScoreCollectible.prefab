@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3925204298922769487}
   - component: {fileID: 3925204298922769484}
   - component: {fileID: 7396014611529174486}
+  - component: {fileID: 2813677518010869891}
   m_Layer: 0
   m_Name: SmallScoreCollectible
   m_TagString: Untagged
@@ -117,6 +118,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDebugging: 0
-  itemPickup: {fileID: 0}
-  interactibleTags: []
+  itemPickup: {fileID: 3925204298922769485}
+  interactibleTags:
+  - Player
   itemID: 0
+  itemName: Small Coin
+--- !u!58 &2813677518010869891
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3925204298922769485}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.21
