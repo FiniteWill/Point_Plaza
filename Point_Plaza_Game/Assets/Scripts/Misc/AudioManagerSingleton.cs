@@ -8,7 +8,8 @@ public class AudioManagerSingleton : MonoBehaviour
 {
     [SerializeField] private AudioMixer mixer = null;
     public AudioMixer Mixer => mixer;
-    [SerializeField] private AudioSource[] musicTracks = null;
+    [SerializeField] private List<AudioSource> musicTracks = null;
+    [SerializeField] private List<AudioSource> sfx = null;
 
     public static AudioManagerSingleton Instance { get; private set; }
 
@@ -27,16 +28,37 @@ public class AudioManagerSingleton : MonoBehaviour
 
     public void PlayAudio(AudioSource audio)
     {
-        if(!audio.isPlaying)
-        { audio.Play(); }
+        if (musicTracks.Contains(audio) || sfx.Contains(audio))
+        {
+            if (!audio.isPlaying)
+            { audio.Play(); }
+        }
     }
 
     public void PauseAudio(AudioSource audio)
     {
-        if(audio.isPlaying)
-        { audio.Stop(); }
+        if (musicTracks.Contains(audio) || sfx.Contains(audio))
+        {
+            if (audio.isPlaying)
+            { audio.Stop(); }
+        }
     }
 
+    public void PauseAllTracks()
+    {
+        foreach(AudioSource track in musicTracks)
+        {
+            track.Pause();
+        }
+    }
+
+    public void PauseAllSFX()
+    {
+        foreach(AudioSource effect in sfx)
+        {
+            effect.Pause();
+        }
+    }
     public void SetVol(string group, float val)
     {
         mixer.SetFloat(group, val);
