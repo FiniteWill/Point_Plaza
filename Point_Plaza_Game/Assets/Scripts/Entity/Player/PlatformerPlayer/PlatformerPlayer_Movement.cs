@@ -18,6 +18,13 @@ public class PlatformerPlayer_Movement : MonoBehaviour, PointPlaza_Input.IPlayer
     private const float GROUND_CHECK_DIST = 0.1f;
     private const float GROUND_CHECK_OFFSET = 0.05f;
     private const string GROUND_TAG = "Ground";
+    private bool canDoubleJump = false;
+    // Charge Attack Constants
+    private const int CHARGE_ATTACK_DAMAGE = 2;
+    private static Vector2 s_chargeAttackForce = new Vector2(4f, 0f);
+    [SerializeField] private Collider2D chargeAttackCollider = null;
+    private const float CHARGE_COOLDOWN = 2f;
+    private bool chargeCoolingDown = false;
 
     [SerializeField] private bool isDebugging = true;
 
@@ -39,7 +46,7 @@ public class PlatformerPlayer_Movement : MonoBehaviour, PointPlaza_Input.IPlayer
         Assert.IsNotNull(rgbd2D, $"{name} does not have a serialized {nameof(rgbd2D)} but requires one.");
         if (rgbd2D != null)
         {
-            rgbd2D.freezeRotation = true; 
+            rgbd2D.freezeRotation = true;
         }
         s_playerInput = transform.root.GetComponentInChildren<PlayerInput>();
         s_movement = s_playerInput.currentActionMap.FindAction("Move", true);
@@ -54,12 +61,13 @@ public class PlatformerPlayer_Movement : MonoBehaviour, PointPlaza_Input.IPlayer
 
     public void Jump()
     {
-        if(isGrounded)
+        if (isGrounded || canDoubleJump)
         {
+            canDoubleJump = false;
             // Apply jump force and then change the animation state based on which way the player was moving
             if (rgbd2D.velocity.x > 5f || rgbd2D.velocity.x < -5f)
             {
-                rgbd2D.AddForce(new Vector2(0.0f, JUMP_SPEED * 0.75f));
+                rgbd2D.AddForce(new Vector2(0.0f, JUMP_SPEED + Mathf.Abs(rgbd2D.velocity.magnitude) * 0.25f));
             }
             else { rgbd2D.AddForce(new Vector2(0, JUMP_SPEED)); }
             if (animationState == PlatformerAnimationState.RunLeft)
@@ -77,9 +85,19 @@ public class PlatformerPlayer_Movement : MonoBehaviour, PointPlaza_Input.IPlayer
         }
     }
 
+    // TODO: Create toggleable and/or powerup for double jumping that uses this. (Post-SGX)
+    private void ResetDoubleJump(float seconds)
+    {
+        while (seconds >= 0)
+        {
+            seconds -= Time.deltaTime;
+        }
+        canDoubleJump = true;
+    }
+
     private void NewMove(float horizontal)
     {
-        if(horizontal > 0) 
+        if (horizontal > 0)
         {
             if (rgbd2D.velocity.x < MAX_HORIZ_SPEED)
             {
@@ -87,7 +105,7 @@ public class PlatformerPlayer_Movement : MonoBehaviour, PointPlaza_Input.IPlayer
             }
             animationState = PlatformerAnimationState.RunRight;
         }
-        else if(horizontal < 0)
+        else if (horizontal < 0)
         {
             if (rgbd2D.velocity.x > -MAX_HORIZ_SPEED)
             {
@@ -95,6 +113,39 @@ public class PlatformerPlayer_Movement : MonoBehaviour, PointPlaza_Input.IPlayer
             }
             animationState = PlatformerAnimationState.RunLeft;
         }
+    }
+
+    private void ChargeAttack()
+    {
+        if (isGrounded)
+        {
+            if (!chargeCoolingDown)
+            {
+                if (rgbd2D.velocity.x < -(MAX_HORIZ_SPEED / 4))
+                {
+                    rgbd2D.AddForce(-s_chargeAttackForce);
+                }
+                else if (rgbd2D.velocity.x > (MAX_HORIZ_SPEED / 4))
+                {
+                    rgbd2D.AddForce(s_chargeAttackForce);
+                }
+                ChargeAttackCooldown(CHARGE_COOLDOWN);
+            }
+        }
+    }
+
+    private IEnumerator EnableChargeAttackCollider(float seconds)
+    {
+        chargeAttackCollider.enabled = true;
+        yield return new WaitForSeconds(seconds);
+        StopCoroutine(EnableChargeAttackCollider(seconds));
+    }
+
+    private IEnumerator ChargeAttackCooldown(float seconds)
+    {
+        chargeCoolingDown = true;
+        yield return new WaitForSeconds(seconds);
+        chargeCoolingDown = false;
     }
 
     /// <summary>
@@ -153,7 +204,7 @@ public class PlatformerPlayer_Movement : MonoBehaviour, PointPlaza_Input.IPlayer
     private void DamageFlash(float secondsToFlash, SpriteRenderer spriteRenderer, Color startColor)
     {
         if (secondsToFlash <= 0) { return; }
-        else 
+        else
         {
             while (secondsToFlash >= secondsToFlash / 2)
             {
@@ -184,6 +235,7 @@ public class PlatformerPlayer_Movement : MonoBehaviour, PointPlaza_Input.IPlayer
 
     public void OnFire(InputAction.CallbackContext context)
     {
+        ChargeAttack();
     }
 
     public void OnJump(InputAction.CallbackContext context)
