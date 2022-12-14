@@ -47,7 +47,12 @@ public class ItemPickup : MonoBehaviour
             {
                 if (pickupSFX != null) { pickupSFX.Play(); }
                 if (collision.CompareTag(tag)) { HandleEffect(collision); }
-                Destroy(this);
+                float temp = pickupSFX.clip.length;
+                while (temp > 0)
+                {
+                    temp -= Time.deltaTime;
+                    Destroy(this);
+                }
             }
         }
     }
