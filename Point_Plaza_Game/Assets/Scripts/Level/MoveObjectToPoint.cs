@@ -21,7 +21,7 @@ public class MoveObjectToPoint : MonoBehaviour
         if (isDebugging)
         { Debug.Log("Move"); }
 
-        objectToMove.position = Vector3.MoveTowards(objectToMove.position, objectToFollow.position, 0.01f);
+        objectToMove.position = Vector3.MoveTowards(objectToMove.position, objectToFollow.position, 0.005f);
         yield return new WaitForEndOfFrame();
         if (objectToMove.position != objectToFollow.position)
         { StartCoroutine(Move()); }
