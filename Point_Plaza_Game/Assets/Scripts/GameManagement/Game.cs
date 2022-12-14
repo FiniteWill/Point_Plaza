@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class Game : MonoBehaviour, ISavable
 {
+    [SerializeField] private bool isDebugging = false;
     [SerializeField] private string menuScene = "MainMenu";
     [SerializeField] private AudioSource gameTrack = null;
     public Scene MenuScene => SceneManager.GetSceneByName(menuScene);
@@ -54,6 +55,7 @@ public class Game : MonoBehaviour, ISavable
 
     public void HandleGameStart()
     {
+        if (isDebugging) { Debug.Log($"Game {gameID} loaded."); }
         if (startPos != null)
         {
             (player as MonoBehaviour).transform.position = startPos;
@@ -67,6 +69,14 @@ public class Game : MonoBehaviour, ISavable
     }
     public void HandleGamePause(bool cond)
     {
+        if (cond)
+        {
+            gameTrack.Pause();
+        }
+        else
+        {
+            gameTrack.Play();
+        }
         isPaused = cond;
         onGamePause?.Invoke(isPaused);
 

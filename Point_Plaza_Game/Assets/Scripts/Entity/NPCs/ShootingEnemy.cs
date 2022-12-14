@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ShootingEnemy : MonoBehaviour
@@ -20,7 +19,8 @@ public class ShootingEnemy : MonoBehaviour
     {
         yield return new WaitForSeconds(fireDelay);
         GameObject temp_projectile = Instantiate(projectilePrefab, projectileSpawnPos);
-        temp_projectile.GetComponent<IProjectile>();
+        IProjectile temp_projBehavior = temp_projectile.GetComponent<IProjectile>();
+        temp_projBehavior.Direction = direction;
         StartCoroutine(Shoot());
     }
    

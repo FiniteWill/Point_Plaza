@@ -6,7 +6,7 @@ using UnityEngine.Assertions;
 /// <summary>
 /// 
 /// </summary>
-[RequireComponent(typeof(DetectionZone)]
+[RequireComponent(typeof(DetectionZone))]
 public class FlyingEnemy : MonoBehaviour
 {
 
@@ -21,6 +21,6 @@ public class FlyingEnemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if()
+        //if()
     }
 }
