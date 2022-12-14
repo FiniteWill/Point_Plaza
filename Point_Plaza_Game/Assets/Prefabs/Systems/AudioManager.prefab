@@ -429,6 +429,7 @@ MonoBehaviour:
   mixer: {fileID: 24100000, guid: 7957bad5100bb80419b4f7b18999b24b, type: 2}
   musicTracks:
   - {fileID: 4878756646617143493}
+  - {fileID: 449071860061808508}
 --- !u!1 &4878756646827007178
 GameObject:
   m_ObjectHideFlags: 0
