@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.SceneManagement;
 
 /// <summary>
@@ -9,11 +10,12 @@ using UnityEngine.SceneManagement;
 public class Game : MonoBehaviour, ISavable
 {
     [SerializeField] private string menuScene = "MainMenu";
+    [SerializeField] private AudioSource gameTrack = null;
     public Scene MenuScene => SceneManager.GetSceneByName(menuScene);
     [SerializeField] private string gameScene = "SampleScene";
     public Scene GameScene => SceneManager.GetSceneByName(gameScene);
     [SerializeField] private IPlayer player;
-    [SerializeField] private Transform startPos;
+    [SerializeField] private Vector3 startPos;
     [SerializeField] private string gameID;
     public string ID => gameID;
     [SerializeField] [Min(0)] private int gameIndex = 0;
@@ -42,23 +44,26 @@ public class Game : MonoBehaviour, ISavable
     public event Action<bool> onGamePause;
     public event Action onGameOver;
 
-    private void Start()
+    private void Awake()
     {
+        // Local initialization
         SaveData saveData = new SaveData();
         data = saveData.gameData[gameIndex];
+        Assert.IsNotNull(gameTrack);
     }
 
     public void HandleGameStart()
     {
         if (startPos != null)
         {
-            (player as MonoBehaviour).transform.position = startPos.position;
+            (player as MonoBehaviour).transform.position = startPos;
         }
         onGameStart?.Invoke();
         curScore = 0;
         curLives = startingLives;
         hasStarted = true;
         SceneManagerSingleton.Instance.LoadScene(gameScene);
+        AudioManagerSingleton.Instance.PlayAudio(gameTrack);
     }
     public void HandleGamePause(bool cond)
     {

@@ -67,6 +67,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a30878a4ec3b62342810b4e50090f829, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chargeAttackCollider: {fileID: 0}
   isDebugging: 0
   rgbd2D: {fileID: 3891980337390569827}
   playerCollider: {fileID: 3891980337390569837}
@@ -363,8 +364,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.9654984, g: 0.050943315, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 3a8738f2897ecaa41a40aa8b3ecd7904, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

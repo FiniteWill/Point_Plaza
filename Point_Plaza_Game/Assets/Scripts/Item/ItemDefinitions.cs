@@ -40,17 +40,27 @@ public class ItemDefinitions : MonoBehaviour
             new Item(true, ItemType.StatItem, MED_SPEED_BOOSTD, index, "Medium Speed Boost"),
             new Item(true, EquipmentSlot.Armor, WEAK_EQUIP, index, "Rusty Helmet"),
             new Item(true, EquipmentSlot.Weapon, WEAK_EQUIP, index, "PeeWee Blaster"),
-            new Item(true, EquipmentSlot.Weapon, POW_EQUIP, index, "Omega Cannon")
+            new Item(true, EquipmentSlot.Weapon, POW_EQUIP, index, "Omega Cannon"),
+            new Item(true, ItemType.StatItem, 100, index, "Small Coin"),
+            new Item(true, ItemType.StatItem, 500, index, "Bag of Coins")
         };
     public static Item GetItem(int id)
     {
         foreach(Item item in totalInventoryList)
         {
-            if(item == id) { return item; }
+            if(item.ID() == id) { return item; }
         }
         return new Item();
     }
 
+    public static Item GetItem(string name)
+    {
+        foreach (Item item in totalInventoryList)
+        {
+            if (item.Name() == name) { return item; }
+        }
+        return new Item();
+    }
     public enum EquipmentSlot
     {
         Weapon,
@@ -68,21 +78,92 @@ public class ItemDefinitions : MonoBehaviour
         public int ID() => id;
         private readonly string name;
         public string Name() => name;
-        private readonly static ItemType type = ItemType.HealthItem;
+        private readonly ItemType type;
         public ItemType Type() => type;
+        private readonly ItemAction action;
+        public ItemAction Action() => action;
+        private readonly int effectValue;
+        public int EffectValue() => effectValue;
+        private readonly ItemEffectType effectType;
+        public ItemEffectType EffectType() => effectType;
         private object itemObj;
         #region constructors
-        public Item(ItemType type, int id, string name)
+        public Item(ItemType type,  int id, string name)
         {
             this.id = id;
             this.name = name;
+            this.type = type;
+            this.effectType = ItemEffectType.NONE;
+            this.action = ItemAction.NONE;
+            this.effectValue = SMALL_HEALTH_BOOST;
+            switch (type)
+            {
+                case ItemType.HealthItem:
+                    itemObj = new HealthItem(SMALL_HEALTH_BOOST, id, name);
+                    action = ItemAction.CHANGE_HEALTH;
+                    break;
+                case ItemType.StatItem:
+                    itemObj = new StatItem(SMALL_SPEED_BOOST, false, id, name);
+                    switch (effectType)
+                    {
+                        case ItemEffectType.JUMP:
+                            this.action = ItemAction.CHANGE_JUMP;
+                            break;
+                        case ItemEffectType.SPEED:
+                            this.action = ItemAction.CHANGE_SPEED;
+                            break;
+                        case ItemEffectType.POINTS:
+                            this.action = ItemAction.CHANGE_POINTS;
+                            break;
+                        default:
+                            this.action = ItemAction.NONE;
+                            break;
+                    }
+                    break;
+                case ItemType.EquipItem:
+                    itemObj = new EquipmentItem(WEAK_EQUIP, id, name);
+                    break;
+                default:
+                    itemObj = new HealthItem(SMALL_HEALTH_BOOST, id, name);
+                    action = ItemAction.CHANGE_HEALTH;
+                    break;
+            }
+        }
+        public Item(ItemType type, ItemEffectType effectType, int id, string name)
+        {
+            this.id = id;
+            this.name = name;
+            this.effectType = effectType;
+            this.type = type;
+            this.effectValue = SMALL_HEALTH_BOOST;
+            action = ItemAction.NONE;
+
             switch(type)
             {
                 case ItemType.HealthItem:
                     itemObj = new HealthItem(SMALL_HEALTH_BOOST, id, name);
+                    action = ItemAction.CHANGE_HEALTH;
+                    
                     break;
                 case ItemType.StatItem:
                     itemObj = new StatItem(SMALL_SPEED_BOOST, false, id, name);
+                    switch(effectType)
+                    {
+                        case ItemEffectType.JUMP:
+                            this.action = ItemAction.CHANGE_JUMP;
+                            this.effectType = ItemEffectType.JUMP;
+                            break;
+                        case ItemEffectType.SPEED:
+                            this.action = ItemAction.CHANGE_SPEED;
+                            this.effectType = ItemEffectType.SPEED;
+                            break;
+                        case ItemEffectType.POINTS:
+                            this.action = ItemAction.CHANGE_POINTS;
+                            this.effectType = ItemEffectType.POINTS;
+                            break;
+                        default:
+                            break;
+                    }
                     break;
                 case ItemType.EquipItem:
                     itemObj = new EquipmentItem(WEAK_EQUIP, id, name);
@@ -92,23 +173,47 @@ public class ItemDefinitions : MonoBehaviour
                     break;
             }
         }
-        public Item(ItemType type, int val, int id, string name)
+        public Item(ItemType type, ItemEffectType effectType, int val, int id, string name)
         {
             this.id = id;
             this.name = name;
+            this.type = type;
+            action = ItemAction.NONE;
+            this.effectType = effectType;
+            effectValue = val;
             switch (type)
             {
                 case ItemType.HealthItem:
                     itemObj = new HealthItem(val, id, name);
+                    action = ItemAction.CHANGE_HEALTH;
                     break;
                 case ItemType.StatItem:
-                    itemObj = new StatItem(val, false, id, name);
+                    itemObj = new StatItem(SMALL_SPEED_BOOST, false, id, name);
+                    action = ItemAction.CHANGE_SPEED;
+                    switch (effectType)
+                    {
+                        case ItemEffectType.JUMP:
+                            this.action = ItemAction.CHANGE_JUMP;
+                            this.effectType = ItemEffectType.JUMP;
+                            break;
+                        case ItemEffectType.SPEED:
+                            this.action = ItemAction.CHANGE_SPEED;
+                            this.effectType = ItemEffectType.SPEED;
+                            break;
+                        case ItemEffectType.POINTS:
+                            this.action = ItemAction.CHANGE_POINTS;
+                            this.effectType = ItemEffectType.POINTS;
+                            break;
+                        default:
+                            break;
+                    }
                     break;
                 case ItemType.EquipItem:
                     itemObj = new EquipmentItem(val, id, name);
                     break;
                 default:
                     itemObj = new HealthItem(val, id, name);
+                    action = ItemAction.CHANGE_HEALTH;
                     break;
             }
         }
@@ -117,19 +222,43 @@ public class ItemDefinitions : MonoBehaviour
             this.id = id;
             id = usingIndexer ? id + 1: id;
             this.name = name;
+            this.action = ItemAction.NONE;
+            this.type = type;
+            this.effectValue = val;
+            this.effectType = ItemEffectType.NONE;
+            
             switch (type)
             {
                 case ItemType.HealthItem:
                     itemObj = new HealthItem(val, id, name);
+                    this.action = ItemAction.CHANGE_HEALTH;
                     break;
                 case ItemType.StatItem:
-                    itemObj = new StatItem(val, false, id, name);
+                    itemObj = new StatItem(SMALL_SPEED_BOOST, false, id, name);
+                    switch (this.effectType)
+                    {
+                        case ItemEffectType.JUMP:
+                            this.action = ItemAction.CHANGE_JUMP;
+                            this.effectType = ItemEffectType.JUMP;
+                            break;
+                        case ItemEffectType.SPEED:
+                            this.action = ItemAction.CHANGE_SPEED;
+                            this.effectType = ItemEffectType.SPEED;
+                            break;
+                        case ItemEffectType.POINTS:
+                            this.action = ItemAction.CHANGE_POINTS;
+                            this.effectType = ItemEffectType.POINTS;
+                            break;
+                        default:
+                            break;
+                    }
                     break;
                 case ItemType.EquipItem:
                     itemObj = new EquipmentItem(val, id, name);
                     break;
                 default:
                     itemObj = new HealthItem(val, id, name);
+                    this.action = ItemAction.CHANGE_HEALTH;
                     break;
             }
         }
@@ -137,6 +266,10 @@ public class ItemDefinitions : MonoBehaviour
         {
             this.id = id;
             this.name = name;
+            effectValue = val;
+            effectType = ItemEffectType.NONE;
+            type = ItemType.EquipItem;
+            action = ItemAction.NONE;
             itemObj = new EquipmentItem(equipType, val, id, name);
         }
         public Item(bool usingIndexer, EquipmentSlot equipType, int val, int id, string name)
@@ -145,10 +278,16 @@ public class ItemDefinitions : MonoBehaviour
             id = usingIndexer ? id + 1 : id;
             this.name = name;
             itemObj = new EquipmentItem(equipType, val, id, name);
+            effectValue = val;
+            effectType = ItemEffectType.NONE;
+            type = ItemType.EquipItem;
+            action = ItemAction.NONE;
         }
         #endregion constructors
         public static bool operator ==(Item i, int id) { return i.ID().Equals(id); }
         public static bool operator !=(Item i, int id) { return !i.ID().Equals(id); }
+        public static bool operator ==(Item i, string name) { return i.Name().Equals(name); }
+        public static bool operator !=(Item i, string name) { return !i.Name().Equals(name); }
     }
 
     public struct HealthItem
