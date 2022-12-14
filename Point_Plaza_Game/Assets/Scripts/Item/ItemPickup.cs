@@ -14,6 +14,7 @@ public class ItemPickup : MonoBehaviour
     [SerializeField] private GameObject itemPickup = null;
     [SerializeField] private string[] interactibleTags = null;
     [SerializeField] private int itemID = 0;
+    [SerializeField] private string itemName = "";
     private ItemDefinitions.Item item;
 
     // ItemActions are being stored in ItemDefinitions and are cannot be set per item pickup because Unity serialization doesn't allow enums, structs, or tuples by default...
@@ -24,7 +25,14 @@ public class ItemPickup : MonoBehaviour
     private void Awake()
     {
         Assert.IsNotNull($"{name} does not have a {nameof(itemPickup)} but requires one.");
-        item = ItemDefinitions.GetItem(itemID);
+        if (itemName != "")
+        {
+            item = ItemDefinitions.GetItem(name);
+        }
+        else
+        {
+            item = ItemDefinitions.GetItem(itemID);
+        }
     }
 
 

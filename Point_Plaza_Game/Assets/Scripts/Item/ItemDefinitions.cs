@@ -41,17 +41,26 @@ public class ItemDefinitions : MonoBehaviour
             new Item(true, EquipmentSlot.Armor, WEAK_EQUIP, index, "Rusty Helmet"),
             new Item(true, EquipmentSlot.Weapon, WEAK_EQUIP, index, "PeeWee Blaster"),
             new Item(true, EquipmentSlot.Weapon, POW_EQUIP, index, "Omega Cannon"),
-            new Item(true, ItemType.StatItem, 100, index, "Small Coin")
+            new Item(true, ItemType.StatItem, 100, index, "Small Coin"),
+            new Item(true, ItemType.StatItem, 500, index, "Bag of Coins")
         };
     public static Item GetItem(int id)
     {
         foreach(Item item in totalInventoryList)
         {
-            if(item == id) { return item; }
+            if(item.ID() == id) { return item; }
         }
         return new Item();
     }
 
+    public static Item GetItem(string name)
+    {
+        foreach (Item item in totalInventoryList)
+        {
+            if (item.Name() == name) { return item; }
+        }
+        return new Item();
+    }
     public enum EquipmentSlot
     {
         Weapon,
@@ -277,6 +286,8 @@ public class ItemDefinitions : MonoBehaviour
         #endregion constructors
         public static bool operator ==(Item i, int id) { return i.ID().Equals(id); }
         public static bool operator !=(Item i, int id) { return !i.ID().Equals(id); }
+        public static bool operator ==(Item i, string name) { return i.Name().Equals(name); }
+        public static bool operator !=(Item i, string name) { return !i.Name().Equals(name); }
     }
 
     public struct HealthItem
