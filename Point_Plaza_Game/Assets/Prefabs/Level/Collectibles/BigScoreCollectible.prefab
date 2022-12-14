@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3367882060665334558}
   - component: {fileID: 7184873024440685228}
   - component: {fileID: 3167750238075500614}
+  - component: {fileID: 5097368061929950960}
   m_Layer: 0
   m_Name: BigScoreCollectible
   m_TagString: Untagged
@@ -106,6 +107,8 @@ MonoBehaviour:
   pickupSFX: {fileID: 3367882060665334558}
   itemID: 0
   itemName: Bag of Coins
+  hasCollectionAnim: 0
+  collectibleAnim: {fileID: 0}
 --- !u!82 &3367882060665334558
 AudioSource:
   m_ObjectHideFlags: 0
@@ -231,7 +234,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.13681337, y: -0.49594805}
@@ -247,3 +250,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.526799, y: 0.918104}
   m_EdgeRadius: 0
+--- !u!114 &5097368061929950960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3925204298922769485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d06257d14f3df0f4bbbd3f5823ef03a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 7184873024440685228}
+  animName: ChestOpen
+  triggerCollider: {fileID: 3167750238075500614}

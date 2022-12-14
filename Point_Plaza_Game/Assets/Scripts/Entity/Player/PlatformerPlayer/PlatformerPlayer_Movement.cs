@@ -9,6 +9,8 @@ public class PlatformerPlayer_Movement : MonoBehaviour, PointPlaza_Input.IPlayer
     // Movement Constants
     private const float MAX_HORIZ_SPEED = 25f;
     private const float HORIZONTAL_SPEED = 5f;
+    private int curSpeedMultiplier = 1;
+    private int curSpeedAddModifier = 0;
     private const float JUMP_SPEED = 300.0f;
     private static Vector2 s_leftMovementForce = new Vector2(-HORIZONTAL_SPEED, 0f);
     private static Vector2 s_rightMovementForce = new Vector2(HORIZONTAL_SPEED, 0f);
@@ -99,7 +101,7 @@ public class PlatformerPlayer_Movement : MonoBehaviour, PointPlaza_Input.IPlayer
     {
         if (horizontal > 0)
         {
-            if (rgbd2D.velocity.x < MAX_HORIZ_SPEED)
+            if (rgbd2D.velocity.x < MAX_HORIZ_SPEED * curSpeedMultiplier + curSpeedAddModifier)
             {
                 rgbd2D.AddForce(s_rightMovementForce);
             }
@@ -107,7 +109,7 @@ public class PlatformerPlayer_Movement : MonoBehaviour, PointPlaza_Input.IPlayer
         }
         else if (horizontal < 0)
         {
-            if (rgbd2D.velocity.x > -MAX_HORIZ_SPEED)
+            if (rgbd2D.velocity.x > -MAX_HORIZ_SPEED * curSpeedMultiplier + curSpeedAddModifier)
             {
                 rgbd2D.AddForce(s_leftMovementForce);
             }
@@ -220,6 +222,17 @@ public class PlatformerPlayer_Movement : MonoBehaviour, PointPlaza_Input.IPlayer
 
             return;
         }
+    }
+
+    // EFFECT HANDLING HELPER FUNCTIONS
+    public void SpeedBoostMult(int modifier, float time)
+    {
+        curSpeedMultiplier = modifier;
+        while(time > 0)
+        {
+            time -= Time.deltaTime;
+        }
+        curSpeedMultiplier = 1;
     }
 
     // Implemented functions of IPlayerActions

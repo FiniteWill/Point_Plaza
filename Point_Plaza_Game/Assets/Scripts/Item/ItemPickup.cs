@@ -13,9 +13,12 @@ public class ItemPickup : MonoBehaviour
     [SerializeField] private bool isDebugging = false;
     [SerializeField] private GameObject itemPickup = null;
     [SerializeField] private string[] interactibleTags = null;
+    [SerializeField] private AudioSource pickupSFX = null;
     [SerializeField] private int itemID = 0;
     [SerializeField] private string itemName = "";
     private ItemDefinitions.Item item;
+    [SerializeField] private bool hasCollectionAnim = false;
+    [SerializeField] private CollectibleAnimation collectibleAnim;
 
     // ItemActions are being stored in ItemDefinitions and are cannot be set per item pickup because Unity serialization doesn't allow enums, structs, or tuples by default...
 
@@ -42,7 +45,9 @@ public class ItemPickup : MonoBehaviour
         {
             foreach (string tag in interactibleTags)
             {
+                if (pickupSFX != null) { pickupSFX.Play(); }
                 if (collision.CompareTag(tag)) { HandleEffect(collision); }
+                Destroy(this);
             }
         }
     }
@@ -70,7 +75,14 @@ public class ItemPickup : MonoBehaviour
                 }
                 break;
             case ItemAction.CHANGE_SPEED:
-                //if(ValidateEffect(collision, Action.CHANGE_SPEED, Pla))
+                PlatformerPlayer_Movement tempMovement = collision.GetComponentInChildren<PlatformerPlayer_Movement>();
+                if(ValidateEffect(collision, ItemAction.CHANGE_SPEED, tempMovement))
+                {
+                    // TODO: CHANGE TO ALLOW FOR MULTIPLICATIVE AND ADDITIVE MODIFIERS
+                    tempMovement.SpeedBoostMult(item.EffectValue(), 15f);
+                }
+                break;
+            case ItemAction.NONE:
                 break;
             default:
                 Debug.LogError($"{name} was given invalid value {item.Action()} and cannot handle the effect.");
