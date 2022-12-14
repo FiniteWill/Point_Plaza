@@ -81,7 +81,7 @@ public class ItemDefinitions : MonoBehaviour
         private readonly ItemType type;
         public ItemType Type() => type;
         private readonly ItemAction action;
-        public ItemAction Action() => Action();
+        public ItemAction Action() => action;
         private readonly int effectValue;
         public int EffectValue() => effectValue;
         private readonly ItemEffectType effectType;

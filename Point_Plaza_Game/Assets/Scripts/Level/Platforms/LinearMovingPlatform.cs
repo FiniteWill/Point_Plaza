@@ -49,15 +49,18 @@ public class LinearMovingPlatform : MonoBehaviour
     /// <returns></returns>
     private IEnumerator MovePlatform()
     {
-        while (transform.position != positions[curPos].position)
+        if (positions.Length >= 2)
         {
-            Move();
-            yield return s_waitFrame;
+            while (transform.position != positions[curPos].position)
+            {
+                Move();
+                yield return s_waitFrame;
+            }
+            yield return movementDelay;
+            curPos++;
+            if (curPos > positions.Length - 1) { curPos = 0; }
+            StartCoroutine(MovePlatform());
         }
-        yield return movementDelay;
-        curPos++;
-        if(curPos > positions.Length-1) { curPos = 0; }
-        StartCoroutine(MovePlatform());
     }
 
     public void Move()
