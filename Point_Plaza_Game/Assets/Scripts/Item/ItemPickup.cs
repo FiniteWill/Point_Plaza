@@ -42,7 +42,7 @@ public class ItemPickup : MonoBehaviour
         {
             foreach (string tag in interactibleTags)
             {
-                if (collision.CompareTag(tag)) { HandleEffect(collision); }
+                if (collision.tag != null && collision.CompareTag(tag)) { HandleEffect(collision); }
             }
         }
     }
