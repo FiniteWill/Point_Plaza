@@ -9,7 +9,7 @@ using UnityEngine.Assertions;
 [RequireComponent(typeof(DetectionZone))]
 public class FlyingEnemy : MonoBehaviour
 {
-
+    private DetectionZone detector;
     private bool playerInRange = false;
 
     // Start is called before the first frame update
