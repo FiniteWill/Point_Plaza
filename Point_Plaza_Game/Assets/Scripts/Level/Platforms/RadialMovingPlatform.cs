@@ -58,7 +58,6 @@ public class RadialMovingPlatform : MonoBehaviour
             yield return s_waitFrame;
         }
         yield return new WaitForSeconds(movementDelay);
-        degreesTurned = 0;
         StartCoroutine(MovePlatform());
     }
 

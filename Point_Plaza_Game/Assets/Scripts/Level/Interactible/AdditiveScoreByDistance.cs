@@ -43,7 +43,7 @@ public class AdditiveScoreByDistance : MonoBehaviour
         {
             if (player.position.x >= objPos.x)
             {
-                objPos = player.position;
+                objPos = player.position += new Vector3(distanceIncrement, 0, 0);
                 game.AddToScore(pointsPerIncrement);
             }
         }
@@ -51,7 +51,7 @@ public class AdditiveScoreByDistance : MonoBehaviour
         {
             if (player.position.x <= objPos.x)
             {
-                objPos = player.position;
+                objPos = player.position -= new Vector3(distanceIncrement, 0, 0);
                 game.AddToScore(pointsPerIncrement);
             }
         }
@@ -65,7 +65,7 @@ public class AdditiveScoreByDistance : MonoBehaviour
         {
             if (player.position.y >= objPos.y)
             {
-                objPos = player.position;
+                objPos = player.position += new Vector3(0, distanceIncrement, 0);
                 game.AddToScore(pointsPerIncrement);
             }
         }
@@ -73,7 +73,7 @@ public class AdditiveScoreByDistance : MonoBehaviour
         {
             if (player.position.y <= objPos.y)
             {
-                objPos = player.position;
+                objPos = player.position -= new Vector3(0, distanceIncrement, 0);
                 game.AddToScore(pointsPerIncrement);
             }
         }
@@ -87,7 +87,7 @@ public class AdditiveScoreByDistance : MonoBehaviour
         {
             if (player.position.z >= objPos.z)
             {
-                objPos = player.position;
+                objPos = player.position += new Vector3(0, 0, distanceIncrement);
                 game.AddToScore(pointsPerIncrement);
             }
         }
@@ -95,7 +95,7 @@ public class AdditiveScoreByDistance : MonoBehaviour
         {
             if (player.position.z <= objPos.z)
             {
-                objPos = player.position;
+                objPos = player.position -= new Vector3(0, 0, distanceIncrement);
                 game.AddToScore(pointsPerIncrement);
             }
         }

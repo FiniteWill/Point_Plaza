@@ -10,12 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 3925204298922769486}
   - component: {fileID: 3925204298922769487}
-  - component: {fileID: 3925204298922769484}
   - component: {fileID: 7396014611529174486}
   - component: {fileID: 2813677518010869891}
   - component: {fileID: 3367882060665334558}
   m_Layer: 0
-  m_Name: SmallScoreCollectible
+  m_Name: SmallSpeedCollectible
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -76,8 +75,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 56241fc2b63e1d649abe49dddf31607b, type: 3}
-  m_Color: {r: 0.9331152, g: 1, b: 0.5226415, a: 1}
+  m_Sprite: {fileID: 21300000, guid: d4e4949b022f89843aaad676364bb817, type: 3}
+  m_Color: {r: 0.97362244, g: 1, b: 0.53207546, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -87,25 +86,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &3925204298922769484
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3925204298922769485}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: b7b76b35d5f267e48ab42646b8b96ae1, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &7396014611529174486
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -121,7 +101,7 @@ MonoBehaviour:
   isDebugging: 0
   itemPickup: {fileID: 3925204298922769485}
   interactibleTags:
-  - Player
+  - Small Speed Boost
   pickupSFX: {fileID: 3367882060665334558}
   itemID: 0
   itemName: Small Coin
@@ -151,7 +131,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 8948478461852891415, guid: 7957bad5100bb80419b4f7b18999b24b, type: 2}
-  m_audioClip: {fileID: 8300000, guid: 60c5e3c6bc88d924e8c41d3a1cf8209b, type: 3}
+  m_audioClip: {fileID: 8300000, guid: c56dc2e66c7b47744a35d1f2691e3f58, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
