@@ -1488,8 +1488,8 @@ GameObject:
   - component: {fileID: 666692217}
   - component: {fileID: 666692220}
   - component: {fileID: 666692219}
-  - component: {fileID: 666692218}
   - component: {fileID: 666692221}
+  - component: {fileID: 666692218}
   m_Layer: 0
   m_Name: LavaSprite
   m_TagString: Untagged
@@ -1577,12 +1577,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 666692215}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcb1dd53db3bfa74a85b9ec9cc389c6b, type: 3}
+  m_Script: {fileID: 11500000, guid: 10c5ef372136c4a4989966bba334ff62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isDebugging: 0
   objectToMove: {fileID: 666692216}
-  objectToFollow: {fileID: 1113280089}
+  directionToMove: {x: 0, y: 0.005, z: 0}
+  moving: 1
 --- !u!114 &666692219
 MonoBehaviour:
   m_ObjectHideFlags: 0
