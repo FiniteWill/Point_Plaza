@@ -5,7 +5,8 @@ using UnityEngine;
 using UnityEngine.Assertions;
 
 [Serializable]
-public enum ItemAction { CHANGE_HEALTH, CHANGE_SPEED, CHANGE_POINTS, };
+public enum ItemAction { NONE, CHANGE_HEALTH, CHANGE_SPEED, CHANGE_JUMP, CHANGE_POINTS, };
+public enum ItemEffectType { NONE, SPEED, JUMP, POINTS };
 
 public class ItemPickup : MonoBehaviour
 {
@@ -14,8 +15,10 @@ public class ItemPickup : MonoBehaviour
     [SerializeField] private string[] interactibleTags = null;
     [SerializeField] private int itemID = 0;
     private ItemDefinitions.Item item;
-    //[SerializeField] private ItemDefinitions.Item itemType = ItemDefinitions.Item.Debug; 
 
+    // ItemActions are being stored in ItemDefinitions and are cannot be set per item pickup because Unity serialization doesn't allow enums, structs, or tuples by default...
+
+    //[SerializeField] private ItemDefinitions.Item itemType = ItemDefinitions.Item.Debug; 
     [SerializeField] private Tuple<ItemAction, int> actionDefinition = new Tuple<ItemAction, int>(ItemAction.CHANGE_HEALTH, 1);
      
     private void Awake()
@@ -42,27 +45,27 @@ public class ItemPickup : MonoBehaviour
 
         // TODO: Define behaviors for item pickup
         if (isDebugging) { Debug.Log($"{name} was sucessfully collected."); }
-        switch(actionDefinition.Item1)
+        switch(item.Action())
         {
             case ItemAction.CHANGE_HEALTH:
                 Health tempHealth = collision.GetComponentInChildren<Health>();
                 if(ValidateEffect(collision, ItemAction.CHANGE_HEALTH, tempHealth))
                 {
-                    tempHealth.ChangeHealth(actionDefinition.Item2);
+                    tempHealth.ChangeHealth(item.EffectValue());
                 }
                 break;
             case ItemAction.CHANGE_POINTS:
                 Game game = GameManagerSingleton.Instance.GetGameForCurScene();
                 if(ValidateEffect(collision, ItemAction.CHANGE_POINTS, game))
                 {
-                    game.ChangeScore(actionDefinition.Item2);
+                    game.ChangeScore(item.EffectValue());
                 }
                 break;
             case ItemAction.CHANGE_SPEED:
                 //if(ValidateEffect(collision, Action.CHANGE_SPEED, Pla))
                 break;
             default:
-                Debug.LogError($"{name} was given invalid value {actionDefinition.Item1} and cannot handle the effect.");
+                Debug.LogError($"{name} was given invalid value {item.Action()} and cannot handle the effect.");
                 break;
         }
     }
