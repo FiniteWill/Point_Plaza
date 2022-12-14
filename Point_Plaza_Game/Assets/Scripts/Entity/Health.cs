@@ -20,6 +20,12 @@ public class Health : MonoBehaviour
     {
         if(isVulnerable) { HandleHealthChanged(newHealth); }
     }
+    private int startingHealth = 0;
+    public int GetStartHealth => startingHealth;
+    private void Awake()
+    {
+        startingHealth =  health;   
+    }
 
     public event Action<int> onHealthChanged;
     public event Action onHealthReachedZero;

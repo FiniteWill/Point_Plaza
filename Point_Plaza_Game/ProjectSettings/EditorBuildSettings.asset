@@ -11,5 +11,11 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/LavaClimb2.unity
+    guid: 4c5f614f97441084a8615e1c38263127
+  - enabled: 1
+    path: Assets/Scenes/LavaClimb3.unity
+    guid: 6029251deadee104fb1666fba1b78319
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 0238dbfd9462d244b9ea00b988e342b8, type: 2}

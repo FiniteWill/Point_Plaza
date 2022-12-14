@@ -67,11 +67,15 @@ public class GameManagerSingleton : MonoBehaviour
         Scene curScene = SceneManager.GetActiveScene();
         foreach(Game g in games)
         {
-            if(g.GameScene == curScene)
+            foreach (string scene in g.GetScenes)
             {
-                return g;
+                if (SceneManager.GetSceneByName(scene) == curScene)
+                {
+                    return g;
+                }
             }
         }
+        Debug.LogError("Unable to get Game for current scene!");
         return null;
     }
 }

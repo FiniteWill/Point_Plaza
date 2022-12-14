@@ -13,10 +13,13 @@ public class Game : MonoBehaviour, ISavable
     [SerializeField] private string menuScene = "MainMenu";
     [SerializeField] private AudioSource gameTrack = null;
     public Scene MenuScene => SceneManager.GetSceneByName(menuScene);
+
+    [SerializeField] private List<string> gameScenes = null;
+    public List<string> GetScenes => gameScenes;
     [SerializeField] private string gameScene = "SampleScene";
     public Scene GameScene => SceneManager.GetSceneByName(gameScene);
     [SerializeField] private IPlayer player;
-    [SerializeField] private Vector3 startPos;
+     private Vector3 startPos =new  Vector3(-14.6000004f, -29.1000004f, 0f);
     [SerializeField] private string gameID;
     public string ID => gameID;
     [SerializeField] [Min(0)] private int gameIndex = 0;

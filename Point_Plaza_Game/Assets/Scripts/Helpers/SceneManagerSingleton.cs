@@ -7,6 +7,7 @@ public class SceneManagerSingleton : MonoBehaviour
 {
     public static SceneManagerSingleton Instance { get; private set; }
     public Scene mainScene { get; private set; }
+    public string mainSceneName { get; set; }
     public Scene persistentScene { get; private set; }
     public event Action onSceneChanged;
     public event Action<Scene> onSceneChangedTo;
@@ -29,6 +30,7 @@ public class SceneManagerSingleton : MonoBehaviour
 
     public void LoadScene(Scene scene)
     {
+        Debug.LogError($"LOADING {scene.name}");
         onSceneChanged?.Invoke();
         onSceneChangedTo?.Invoke(scene);
         onSceneChangedFromTo?.Invoke(SceneManager.GetActiveScene(), scene);

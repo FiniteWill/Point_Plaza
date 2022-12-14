@@ -12,7 +12,7 @@ public class ScoreUpdater : MonoBehaviour
     {
         g = GameManagerSingleton.Instance.GetGameForCurScene();
         Assert.IsNotNull(g, $"{name} is missing a {typeof(Game)} but requires one.");
-        Assert.IsNotNull(g, $"{name} is missing a {typeof(Text)} but requires one.");
+        Assert.IsNotNull(textToUpdate, $"{name} is missing a {typeof(Text)} but requires one.");
     }
     // Update is called once per frame
     void Update()
