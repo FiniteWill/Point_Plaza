@@ -37,7 +37,10 @@ public class ProceduralPlatformSpawner : MonoBehaviour
     private PlatformerPlayer_Movement playerMovement = null;
     // The value (x for horz, y for vert spawning) that the player was at when platforms were last spawned
     // Used to determine how far the player has to go before next set of platforms spawn
-    private float lastSpawningPoint = 0;
+    private Vector3 lastSpawningPoint = Vector3.zero;
+
+    private float horizontalOffset = 0;
+    private float verticalOffset = 0;
     
     private void Awake()
     {
@@ -65,18 +68,18 @@ public class ProceduralPlatformSpawner : MonoBehaviour
     {
         // Check if the current player position - the last position platforms were spawned at is >= 
         // the amount of distance the player has to reach before spawning a new batch of platforms
-        if(verticalSpawning && playerMovement.transform.position.y - lastSpawningPoint > maxSpawningDist)
+        if(verticalSpawning && playerMovement.transform.position.y - lastSpawningPoint.y > maxSpawningDist)
         {
             SpawnPlatforms(NUM_TO_SPAWN, lastSpawningPoint, verticalSpawning);
         }
-        else if(!verticalSpawning && playerMovement.transform.position.x - lastSpawningPoint> maxSpawningDist)
+        else if(!verticalSpawning && playerMovement.transform.position.x - lastSpawningPoint.x> maxSpawningDist)
         {
             SpawnPlatforms(NUM_TO_SPAWN, lastSpawningPoint, verticalSpawning);
         }
     }
 
 
-    private void SpawnPlatforms(int numToSpawn, float curPos, bool isVertical)
+    private void SpawnPlatforms(int numToSpawn, Vector3 curPos, bool isVertical)
     {
         for (int i = 0; i < numToSpawn; ++i)
         {
@@ -89,7 +92,7 @@ public class ProceduralPlatformSpawner : MonoBehaviour
             }
             else
             {
-                var newPlatform = Instantiate(platformPrefab);
+                var newPlatform = Instantiate(platformPrefab, new Vector3(lastSpawningPoint.x + horizontalOffset, lastSpawningPoint.y + verticalOffset, lastSpawningPoint.z), Quaternion.identity);
                 spawnedObjects.Add(newPlatform);
                 spawnedPlatforms.Add(newPlatform);
             }

@@ -6,7 +6,7 @@ public class TeleportOnAwake : MonoBehaviour
 {
     [SerializeField] private Transform player;
     [SerializeField] private Transform spawn;
-    private float delay = 2f;
+    private float delay = 0.1f;
 
 
     // Start is called before the first frame update
